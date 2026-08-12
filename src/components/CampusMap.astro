@@ -15,30 +15,34 @@
     </div>
   </div>
 
-  <!-- PANEL POINT PICKER HELPER -->
+  <!-- TOOL KALIBRASI GAMBAR OVERLAY -->
   <div class="mt-4 p-4 bg-slate-900 text-slate-100 rounded-xl text-xs font-mono shadow-lg border border-slate-800">
     <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
-      <span class="font-bold text-emerald-400">📍 Point Picker Active</span>
-      <span class="bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded text-[10px]">Klik di mana saja pada peta</span>
+      <span class="font-bold text-amber-400">🗺️ Tool Kalibrasi Gambar Overlay</span>
+      <span class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded text-[10px]">Geser 2 Pin Merah</span>
     </div>
-    <p class="text-slate-400 text-[11px] mb-2">Klik sembarang lokasi di peta untuk mengambil koordinat presisi secara otomatis.</p>
-    
+    <p class="text-slate-400 text-[11px] mb-2">Geser pin 🔴 SW (Kiri-Bawah) dan 🔴 NE (Kanan-Atas) pada peta untuk menyesuaikan letak gambar.</p>
+
+    <pre id="bounds-output" class="bg-slate-950 p-2.5 rounded-lg text-emerald-400 overflow-x-auto text-[11px] border border-slate-800 mb-2">
+let swLat = -6.310000, swLng = 106.753000;
+let neLat = -6.304000, neLng = 106.758000;
+    </pre>
+
+    <button id="btn-copy-bounds" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 rounded-lg transition-all text-xs">
+      📋 Copy Koordinat Bounds Gambar
+    </button>
+  </div>
+
+  <!-- PANEL POINT PICKER INTERAKTIF -->
+  <div class="mt-4 p-4 bg-slate-900 text-slate-100 rounded-xl text-xs font-mono shadow-lg border border-slate-800">
+    <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
+      <span class="font-bold text-emerald-400">📍 Point Picker (Klik Peta)</span>
+    </div>
     <div id="picker-output-container" class="hidden space-y-2">
       <pre id="picker-json" class="bg-slate-950 p-3 rounded-lg text-amber-300 overflow-x-auto text-[11px] border border-slate-800 leading-relaxed"></pre>
       <button id="btn-copy-point" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 rounded-lg transition-all text-xs">
         📋 Copy JSON Point ke Clipboard
       </button>
-    </div>
-  </div>
-
-  <!-- PANEL DEBUG LOGS -->
-  <div class="mt-4 p-4 bg-slate-900 text-slate-100 rounded-xl text-xs font-mono shadow-lg border border-slate-800">
-    <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
-      <span class="font-bold text-amber-400">🐛 Live Debug Console</span>
-      <span id="leaflet-status" class="bg-red-500/20 text-red-400 px-2 py-0.5 rounded text-[10px]">Leaflet: Inactive</span>
-    </div>
-    <div id="debug-logs" class="space-y-1 max-h-32 overflow-y-auto text-[11px] font-mono leading-relaxed">
-      <p class="text-slate-400">[Init] Menunggu DOM selesai dimuat...</p>
     </div>
   </div>
 </div>
@@ -48,151 +52,115 @@
   import 'leaflet/dist/leaflet.css';
   import locations from '../data/locations.json';
 
-  function logDebug(message: string, isError = false) {
-    const logContainer = document.getElementById('debug-logs');
-    if (logContainer) {
-      const p = document.createElement('p');
-      p.className = isError ? 'text-red-400 font-bold' : 'text-emerald-400';
-      p.innerText = `[${new Date().toLocaleTimeString()}] ${message}`;
-      logContainer.appendChild(p);
-      logContainer.scrollTop = logContainer.scrollHeight;
-    }
-    if (isError) console.error(message);
-    else console.log(message);
-  }
-
   function initMap() {
-    logDebug("Memulai inisialisasi peta...");
+    const mapDiv = document.getElementById('map');
+    if (!mapDiv) return;
 
-    try {
-      const statusElem = document.getElementById('leaflet-status');
-      if (statusElem) {
-        statusElem.innerText = "Leaflet: Loaded";
-        statusElem.className = "bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-[10px]";
-      }
+    // 1. Inisialisasi Map (Center UIN Jakarta)
+    const map = L.map('map').setView([-6.3073, 106.7558], 17);
 
-      const mapDiv = document.getElementById('map');
-      if (!mapDiv) {
-        throw new Error("Element <div id='map'> tidak ditemukan!");
-      }
+    const fallback = document.getElementById('map-fallback');
+    if (fallback) fallback.style.display = 'none';
 
-      // 1. Inisialisasi Map (UIN Jakarta Center)
-      const map = L.map('map').setView([-6.3073, 106.7558], 17);
+    // 2. OpenStreetMap Basemap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
 
-      const fallback = document.getElementById('map-fallback');
-      if (fallback) fallback.style.display = 'none';
+    // 3. CUSTOM OVERLAY GAMBAR (Peta Ilustrasi Buatan Sendiri)
+    // Ubah '/peta-uin.svg' ke '/peta-uin.png' jika memakai PNG
+    const imageUrl = '/peta-uin.svg';
 
-      // 2. OpenStreetMap Tile Layer
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(map);
+    // Koordinat Awal Bounds Kiri-Bawah (SW) & Kanan-Atas (NE)
+    let swLat = -6.3100, swLng = 106.7530;
+    let neLat = -6.3040, neLng = 106.7580;
+    let bounds = L.latLngBounds([swLat, swLng], [neLat, neLng]);
 
-      // 3. Render Existing Markers dari locations.json
-      if (Array.isArray(locations)) {
-        locations.forEach((loc: any) => {
-          const coords: [number, number] = [loc.coordinates[0], loc.coordinates[1]];
-          const marker = L.marker(coords).addTo(map);
-          marker.bindPopup(`
-            <div class="p-1">
-              <span class="inline-block bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded mb-1">${loc.category}</span>
-              <h4 class="font-bold text-slate-800 text-sm">${loc.name}</h4>
-              <p class="text-xs text-slate-600 mt-1 leading-snug">${loc.description}</p>
-            </div>
-          `);
-        });
-      }
+    // Overlay Gambar dengan opacity 0.7 agar peta dasar kelihatan saat dikalibrasi
+    const customOverlay = L.imageOverlay(imageUrl, bounds, {
+      opacity: 0.7,
+      interactive: false
+    }).addTo(map);
 
-      // --- 4. FITUR POINT PICKER INTERAKTIF ---
-      let tempPickerMarker: L.Marker | null = null;
+    // 4. MARKER DRAGGABLE UNTUK KALIBRASI GAMBAR
+    const markerSW = L.marker([swLat, swLng], { draggable: true, title: 'Kiri-Bawah (SW)' }).addTo(map);
+    const markerNE = L.marker([neLat, neLng], { draggable: true, title: 'Kanan-Atas (NE)' }).addTo(map);
 
-      map.on('click', (e: L.LeafletMouseEvent) => {
-        const { lat, lng } = e.latlng;
-        const latFormatted = Number(lat.toFixed(6));
-        const lngFormatted = Number(lng.toFixed(6));
+    function updateOverlayBounds() {
+      const newSW = markerSW.getLatLng();
+      const newNE = markerNE.getLatLng();
+      const newBounds = L.latLngBounds(newSW, newNE);
 
-        // Format objek JSON untuk disalin
-        const jsonTemplate = `{
-  "id": "lokasi-baru-${Date.now().toString().slice(-4)}",
+      customOverlay.setBounds(newBounds);
+
+      const outputText = `let swLat = ${newSW.lat.toFixed(6)}, swLng = ${newSW.lng.toFixed(6)};
+let neLat = ${newNE.lat.toFixed(6)}, neLng = ${newNE.lng.toFixed(6)};`;
+
+      const outputElem = document.getElementById('bounds-output');
+      if (outputElem) outputElem.innerText = outputText;
+    }
+
+    markerSW.on('drag', updateOverlayBounds);
+    markerNE.on('drag', updateOverlayBounds);
+
+    document.getElementById('btn-copy-bounds')?.addEventListener('click', () => {
+      const text = document.getElementById('bounds-output')?.innerText || '';
+      navigator.clipboard.writeText(text);
+      alert('Koordinat Bounds Gambar berhasil disalin!');
+    });
+
+    // 5. RENDER EXISTING MARKERS DARI JSON
+    if (Array.isArray(locations)) {
+      locations.forEach((loc: any) => {
+        const coords: [number, number] = [loc.coordinates[0], loc.coordinates[1]];
+        const marker = L.marker(coords).addTo(map);
+        marker.bindPopup(`
+          <div class="p-1">
+            <span class="inline-block bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded mb-1">${loc.category}</span>
+            <h4 class="font-bold text-slate-800 text-sm">${loc.name}</h4>
+            <p class="text-xs text-slate-600 mt-1 leading-snug">${loc.description}</p>
+          </div>
+        `);
+      });
+    }
+
+    // 6. POINT PICKER (KLIK UNTUK INPUT JSON LOKASI)
+    let tempPickerMarker: L.Marker | null = null;
+
+    map.on('click', (e: L.LeafletMouseEvent) => {
+      const { lat, lng } = e.latlng;
+      const latFormatted = Number(lat.toFixed(6));
+      const lngFormatted = Number(lng.toFixed(6));
+
+      const jsonTemplate = `{
+  "id": "lokasi-${Date.now().toString().slice(-4)}",
   "name": "Nama Lokasi",
   "category": "Fasilitas",
   "coordinates": [${latFormatted}, ${lngFormatted}],
-  "description": "Deskripsi singkat lokasi di sini."
+  "description": "Deskripsi singkat."
 }`;
 
-        // Hapus marker temp lama jika ada
-        if (tempPickerMarker) {
-          map.removeLayer(tempPickerMarker);
-        }
+      if (tempPickerMarker) map.removeLayer(tempPickerMarker);
 
-        // Buat marker temp baru
-        tempPickerMarker = L.marker([lat, lng], { draggable: true }).addTo(map);
-        tempPickerMarker.bindPopup(`
-          <div class="p-1 text-center">
-            <span class="text-xs font-bold text-emerald-600">📍 Titik Terpilih</span>
-            <p class="text-[11px] font-mono text-slate-600 mt-1">${latFormatted}, ${lngFormatted}</p>
-          </div>
-        `).openPopup();
+      tempPickerMarker = L.marker([lat, lng]).addTo(map);
+      tempPickerMarker.bindPopup(`<b>📍 [${latFormatted}, ${lngFormatted}]</b>`).openPopup();
 
-        // Tampilkan hasil di panel bawah
-        const container = document.getElementById('picker-output-container');
-        const jsonBox = document.getElementById('picker-json');
-        
-        if (container && jsonBox) {
-          container.classList.remove('hidden');
-          jsonBox.innerText = jsonTemplate;
-        }
-
-        logDebug(`Titik diklik: [${latFormatted}, ${lngFormatted}]`);
-      });
-
-      // Tombol Copy JSON
-      document.getElementById('btn-copy-point')?.addEventListener('click', () => {
-        const text = document.getElementById('picker-json')?.innerText || '';
-        navigator.clipboard.writeText(text);
-        alert('Format JSON lokasi berhasil disalin ke clipboard!');
-      });
-
-      // 5. GPS Tracking User
-      let userMarker: L.Marker;
-      let userCircle: L.Circle;
-
-      if ('geolocation' in navigator) {
-        navigator.geolocation.watchPosition(
-          (pos) => {
-            const { latitude, longitude, accuracy } = pos.coords;
-            const latLng: [number, number] = [latitude, longitude];
-
-            if (!userMarker) {
-              userMarker = L.marker(latLng, { title: 'Posisi Kamu' }).addTo(map)
-                .bindPopup('<b class="text-blue-600">Kamu ada di sini!</b>');
-              
-              userCircle = L.circle(latLng, { 
-                radius: accuracy, 
-                color: '#2563eb', 
-                fillColor: '#3b82f6', 
-                fillOpacity: 0.15 
-              }).addTo(map);
-            } else {
-              userMarker.setLatLng(latLng);
-              userCircle.setLatLng(latLng);
-              userCircle.setRadius(accuracy);
-            }
-          },
-          (err) => console.warn('GPS Error:', err.message),
-          { enableHighAccuracy: true, timeout: 10000 }
-        );
+      const container = document.getElementById('picker-output-container');
+      const jsonBox = document.getElementById('picker-json');
+      if (container && jsonBox) {
+        container.classList.remove('hidden');
+        jsonBox.innerText = jsonTemplate;
       }
+    });
 
-      setTimeout(() => {
-        map.invalidateSize();
-      }, 300);
+    document.getElementById('btn-copy-point')?.addEventListener('click', () => {
+      const text = document.getElementById('picker-json')?.innerText || '';
+      navigator.clipboard.writeText(text);
+      alert('JSON Point berhasil disalin!');
+    });
 
-      logDebug("Setup Peta & Point Picker Selesai!");
-
-    } catch (err: any) {
-      logDebug(`INIT ERROR: ${err.message}`, true);
-    }
+    setTimeout(() => map.invalidateSize(), 300);
   }
 
   if (document.readyState === 'loading') {
