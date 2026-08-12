@@ -1,0 +1,214 @@
+---
+// src/components/CampusMap.astro
+---
+
+<div class="relative w-full max-w-6xl mx-auto px-2 sm:px-4">
+  <!-- Container Peta (Tinggi eksplisit 600px) -->
+  <div 
+    id="map" 
+    class="w-full rounded-2xl shadow-2xl border border-slate-300 bg-slate-200 z-0 relative overflow-hidden" 
+    style="height: 600px; min-height: 600px;"
+  >
+    <!-- Placeholder Loading -->
+    <div id="map-fallback" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 z-[10] p-6 text-center">
+      <div class="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+      <p class="font-semibold text-slate-700">Sedang memuat peta...</p>
+    </div>
+  </div>
+
+  <!-- PANEL DEBUG LOGS -->
+  <div class="mt-4 p-4 bg-slate-900 text-slate-100 rounded-xl text-xs font-mono shadow-lg border border-slate-800">
+    <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
+      <span class="font-bold text-amber-400">🐛 Live Debug Console</span>
+      <span id="leaflet-status" class="bg-red-500/20 text-red-400 px-2 py-0.5 rounded text-[10px]">Leaflet: Inactive</span>
+    </div>
+    <div id="debug-logs" class="space-y-1 max-h-40 overflow-y-auto text-[11px] font-mono leading-relaxed">
+      <p class="text-slate-400">[Init] Menunggu DOM selesai dimuat...</p>
+    </div>
+  </div>
+
+  <!-- Panel Helper Kalibrasi -->
+  <div class="mt-4 p-4 bg-white/95 backdrop-blur-md rounded-xl shadow-md border border-slate-200 text-xs font-mono">
+    <div class="flex items-center justify-between mb-1">
+      <h3 class="font-bold text-slate-800">📍 Tool Kalibrasi</h3>
+      <span class="bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded text-[10px] font-semibold">DEV MODE</span>
+    </div>
+    <p class="text-slate-500 mb-2">Geser 2 pin merah pada peta untuk menyelaraskan gambar ilustrasi.</p>
+    
+    <pre id="bounds-output" class="bg-slate-900 text-emerald-400 p-2.5 rounded-lg text-[11px] overflow-x-auto">
+[-6.3100, 106.7530], [-6.3040, 106.7580]
+    </pre>
+
+    <button id="btn-copy" class="mt-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition-all">
+      Copy Koordinat Bounds
+    </button>
+  </div>
+</div>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+  import locations from '../data/locations.json';
+
+  function logDebug(message: string, isError = false) {
+    const logContainer = document.getElementById('debug-logs');
+    if (logContainer) {
+      const p = document.createElement('p');
+      p.className = isError ? 'text-red-400 font-bold' : 'text-emerald-400';
+      p.innerText = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logContainer.appendChild(p);
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+    if (isError) console.error(message);
+    else console.log(message);
+  }
+
+  function initMap() {
+    logDebug("Memulai inisialisasi peta...");
+
+    try {
+      const statusElem = document.getElementById('leaflet-status');
+      if (statusElem) {
+        statusElem.innerText = "Leaflet: Loaded";
+        statusElem.className = "bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-[10px]";
+      }
+
+      const mapDiv = document.getElementById('map');
+      if (!mapDiv) {
+        throw new Error("Element <div id='map'> tidak ditemukan!");
+      }
+
+      logDebug(`Ukuran container #map: ${mapDiv.clientWidth}px x ${mapDiv.clientHeight}px`);
+
+      // 1. Inisialisasi Map
+      const map = L.map('map').setView([-6.3073, 106.7558], 17);
+      logDebug("L.map berhasil dibuat.");
+
+      // Sembunyikan spinner
+      const fallback = document.getElementById('map-fallback');
+      if (fallback) fallback.style.display = 'none';
+
+      // 2. OpenStreetMap Tile Layer
+      const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      });
+
+      tileLayer.on('tileload', () => logDebug("OpenStreetMap Tile berhasil dimuat."));
+      tileLayer.on('tileerror', (e) => logDebug(`Gagal memuat Tile OpenStreetMap: ${e}`, true));
+      tileLayer.addTo(map);
+
+      // 3. Custom Image Overlay
+      const imageUrl = '/peta-uin.png';
+      logDebug(`Mencoba memuat overlay gambar: ${imageUrl}`);
+
+      let swLat = -6.3100, swLng = 106.7530;
+      let neLat = -6.3040, neLng = 106.7580;
+      let bounds = L.latLngBounds([swLat, swLng], [neLat, neLng]);
+
+      const customOverlay = L.imageOverlay(imageUrl, bounds, {
+        opacity: 0.6,
+        interactive: false
+      }).addTo(map);
+
+      // Cek apakah file gambar ada di public/
+      const imgTester = new Image();
+      imgTester.onload = () => logDebug("Gambar /peta-uin.png DITEMUKAN di public/!");
+      imgTester.onerror = () => logDebug("WARNING: Gambar /peta-uin.png TIDAK DITEMUKAN (404) di public/!", true);
+      imgTester.src = imageUrl;
+
+      // 4. Kalibrator Markers
+      const markerSW = L.marker([swLat, swLng], { draggable: true, title: 'Kiri Bawah' }).addTo(map);
+      const markerNE = L.marker([neLat, neLng], { draggable: true, title: 'Kanan Atas' }).addTo(map);
+
+      function updateBounds() {
+        const newSW = markerSW.getLatLng();
+        const newNE = markerNE.getLatLng();
+        const newBounds = L.latLngBounds(newSW, newNE);
+
+        customOverlay.setBounds(newBounds);
+
+        const outputText = `[
+  [${newSW.lat.toFixed(6)}, ${newSW.lng.toFixed(6)}],
+  [${newNE.lat.toFixed(6)}, ${newNE.lng.toFixed(6)}]
+]`;
+
+        const outputElem = document.getElementById('bounds-output');
+        if (outputElem) outputElem.innerText = outputText;
+      }
+
+      markerSW.on('drag', updateBounds);
+      markerNE.on('drag', updateBounds);
+
+      document.getElementById('btn-copy')?.addEventListener('click', () => {
+        const text = document.getElementById('bounds-output')?.innerText || '';
+        navigator.clipboard.writeText(text);
+        alert('Koordinat bounds disalin!');
+      });
+
+      // 5. Render Marker dari JSON
+      if (Array.isArray(locations)) {
+        logDebug(`Merenender ${locations.length} titik lokasi kampus...`);
+        locations.forEach((loc: any) => {
+          const coords: [number, number] = [loc.coordinates[0], loc.coordinates[1]];
+          const marker = L.marker(coords).addTo(map);
+          marker.bindPopup(`
+            <div class="p-1">
+              <span class="inline-block bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded mb-1">${loc.category}</span>
+              <h4 class="font-bold text-slate-800 text-sm">${loc.name}</h4>
+              <p class="text-xs text-slate-600 mt-1 leading-snug">${loc.description}</p>
+            </div>
+          `);
+        });
+      }
+
+      // 6. GPS Tracking User
+      let userMarker: L.Marker;
+      let userCircle: L.Circle;
+
+      if ('geolocation' in navigator) {
+        navigator.geolocation.watchPosition(
+          (pos) => {
+            const { latitude, longitude, accuracy } = pos.coords;
+            const latLng: [number, number] = [latitude, longitude];
+
+            if (!userMarker) {
+              userMarker = L.marker(latLng, { title: 'Posisi Kamu' }).addTo(map)
+                .bindPopup('<b class="text-blue-600">Kamu ada di sini!</b>');
+              
+              userCircle = L.circle(latLng, { 
+                radius: accuracy, 
+                color: '#2563eb', 
+                fillColor: '#3b82f6', 
+                fillOpacity: 0.15 
+              }).addTo(map);
+            } else {
+              userMarker.setLatLng(latLng);
+              userCircle.setLatLng(latLng);
+              userCircle.setRadius(accuracy);
+            }
+          },
+          (err) => console.warn('GPS Error:', err.message),
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      }
+
+      setTimeout(() => {
+        map.invalidateSize();
+        logDebug("map.invalidateSize() dipanggil.");
+      }, 300);
+
+      logDebug("Setup Peta Selesai!");
+
+    } catch (err: any) {
+      logDebug(`INIT ERROR: ${err.message}`, true);
+    }
+  }
+
+  // Jalankan saat DOM siap
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMap);
+  } else {
+    initMap();
+  }
+</script>

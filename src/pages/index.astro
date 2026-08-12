@@ -1,11 +1,38 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// src/pages/index.astro
+import '../styles/global.css';
+import CampusMap from '../components/CampusMap.astro';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Peta Interaktif UIN Jakarta</title>
+  </head>
+  <body class="bg-slate-50 min-h-screen py-6 text-slate-800 font-sans">
+    <!-- Header -->
+    <header class="text-center mb-6 px-4">
+      <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1 rounded-full mb-2">
+        UIN Syarif Hidayatullah Jakarta
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+        Peta Interaktif Kampus
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base mt-2 max-w-xl mx-auto">
+        Navigasi lokasi lokal, kantin, gazebo, dan lorong kampus secara real-time dengan GPS HP kamu.
+      </p>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <CampusMap />
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-slate-400 mt-8">
+      <p>Built with Astro JS, Leaflet & Cloudflare Pages</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+/* Opsional: Styling Pop-up Leaflet agar selaras dengan Tailwind */
+.leaflet-popup-content-wrapper {
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1) !important;
+  font-family: inherit !important;
+  padding: 0.25rem !important;
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1) !important;
+}

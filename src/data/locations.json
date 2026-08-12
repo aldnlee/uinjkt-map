@@ -1,0 +1,30 @@
+[
+  {
+    "id": "kantin-fst",
+    "name": "Kantin Rahasia FST",
+    "category": "Kuliner",
+    "coordinates": [-6.3070, 106.7550],
+    "description": "Kantin di belakang gedung FST, spot makan & nongkrong murah meriah mahasiswa."
+  },
+  {
+    "id": "gazebo-sc",
+    "name": "Gazebo Student Center",
+    "category": "Nongkrong",
+    "coordinates": [-6.3062, 106.7542],
+    "description": "Spot favorit kumpul organisasi, diskusi, dan nugas sore hari."
+  },
+  {
+    "id": "parkiran-fitk",
+    "name": "Parkiran Dalam FITK",
+    "category": "Fasilitas",
+    "coordinates": [-6.3081, 106.7562],
+    "description": "Area parkir motor alternatif jika lapangan utama penuh."
+  },
+  {
+    "id": "masjid-fathullah",
+    "name": "Masjid Fathullah UIN",
+    "category": "Ibadah",
+    "coordinates": [-6.3053, 106.7538],
+    "description": "Masjid utama kampus UIN Syarif Hidayatullah Jakarta."
+  }
+]
