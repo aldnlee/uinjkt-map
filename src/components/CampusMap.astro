@@ -11,39 +11,104 @@
   >
     <div id="map-fallback" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 z-[10] p-6 text-center">
       <div class="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-      <p class="font-semibold text-slate-700">Sedang memuat peta...</p>
+      <p class="font-semibold text-slate-700">Sedang memuat peta UIN Jakarta...</p>
     </div>
   </div>
 
-  <!-- TOOL KALIBRASI OFFSET OVERLAY -->
-  <div class="mt-4 p-4 bg-slate-900 text-slate-100 rounded-xl text-xs font-mono shadow-lg border border-slate-800">
-    <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
-      <span class="font-bold text-amber-400">🖼️ Custom Overlay (testmap.png)</span>
-      <span class="bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded text-[10px]">Center Target</span>
+  <!-- MODAL DETAIL LAYOUT 2 KOLOM -->
+  <div 
+    id="detail-modal" 
+    class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[9999] hidden flex items-center justify-center p-3 sm:p-6 transition-all"
+  >
+    <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 bg-gradient-to-r from-emerald-800 via-teal-800 to-slate-900 text-white flex justify-between items-center border-b border-slate-700">
+        <div>
+          <span id="modal-category" class="inline-block bg-emerald-500/30 text-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-1">
+            Kategori
+          </span>
+          <h2 id="modal-title" class="text-xl sm:text-2xl font-bold leading-tight">Nama Gedung</h2>
+        </div>
+        <button id="btn-close-modal" class="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full w-9 h-9 flex items-center justify-center transition-all text-lg font-bold">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Body (2 Kolom Grid) -->
+      <div class="p-4 sm:p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-12 gap-6 text-slate-700">
+        
+        <!-- ================= KOLOM KIRI: FOTO UTAMA & LEGENDA ================= -->
+        <div class="md:col-span-5 space-y-4 border-b md:border-b-0 md:border-r border-slate-200 pb-4 md:pb-0 md:pr-6">
+          
+          <!-- Foto Utama Gedung -->
+          <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100 aspect-video relative">
+            <img 
+              id="modal-image" 
+              src="/testmap.png" 
+              alt="Foto Lokasi" 
+              class="w-full h-full object-cover"
+              onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=UIN+Jakarta+Location'"
+            />
+            <span class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded">
+              📸 Tampilan Gedung
+            </span>
+          </div>
+
+          <!-- Legenda Simbol / Layanan -->
+          <div id="modal-legend-section" class="hidden bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+              <span>📌</span> Legenda & Simbol Layanan
+            </h4>
+            <div id="modal-legend-list" class="space-y-2 text-xs"></div>
+          </div>
+
+          <!-- Info Koordinat GPS -->
+          <div class="bg-slate-900 text-slate-300 p-3 rounded-xl text-[11px] font-mono border border-slate-800">
+            <span class="text-amber-400 font-bold block mb-0.5">🌐 Koordinat GPS:</span>
+            <span id="modal-coords">[-6.00000, 106.00000]</span>
+          </div>
+        </div>
+
+        <!-- ================= KOLOM KANAN: DETAIL & LIST UNIT ================= -->
+        <div class="md:col-span-7 space-y-5">
+          
+          <!-- Deskripsi Gedung -->
+          <div>
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Tentang Gedung / Tempat</h3>
+            <p id="modal-description" class="text-sm leading-relaxed text-slate-600 bg-slate-50/80 p-3.5 rounded-xl border border-slate-100"></p>
+          </div>
+
+          <!-- Daftar Unit & Pusat Layanan -->
+          <div id="modal-units-section" class="hidden">
+            <div class="flex items-center justify-between mb-2.5">
+              <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">🏢 Unit & Pusat Layanan di Dalam Gedung</h3>
+              <span id="modal-unit-count" class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
+                0 Unit
+              </span>
+            </div>
+            
+            <div id="modal-units-list" class="space-y-4 max-h-[360px] overflow-y-auto pr-1"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-3 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-400 font-medium">
+        Peta Interaktif UIN Syarif Hidayatullah Jakarta
+      </div>
     </div>
-    <p class="text-slate-400 text-[11px] mb-2">Titik pusat `[-6.306524, 106.754878]` diatur tepat di posisi 1000px × 1000px gambar.</p>
+  </div>
 
-    <pre id="bounds-output" class="bg-slate-950 p-2.5 rounded-lg text-emerald-400 overflow-x-auto text-[11px] border border-slate-800 mb-2">
-SW: [-6.310124, 106.751278]
-NE: [-6.302924, 106.758478]
-    </pre>
-
-    <button id="btn-copy-bounds" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 rounded-lg transition-all text-xs">
-      📋 Copy Bounds Koordinat
+  <!-- POINT PICKER DEV TOOL (Opsional) -->
+  <div id="picker-output-container" class="mt-4 p-4 bg-slate-900 text-slate-100 rounded-xl text-xs font-mono shadow-lg border border-slate-800 hidden space-y-2">
+    <span class="font-bold text-amber-400 border-b border-slate-800 pb-1 block">📍 JSON Point Picker</span>
+    <pre id="picker-json" class="bg-slate-950 p-3 rounded-lg text-amber-300 overflow-x-auto text-[11px] border border-slate-800 leading-relaxed"></pre>
+    <button id="btn-copy-point" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 rounded-lg transition-all text-xs">
+      📋 Copy JSON Point ke Clipboard
     </button>
-  </div>
-
-  <!-- PANEL POINT PICKER INTERAKTIF -->
-  <div class="mt-4 p-4 bg-slate-900 text-slate-100 rounded-xl text-xs font-mono shadow-lg border border-slate-800">
-    <div class="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
-      <span class="font-bold text-emerald-400">📍 Point Picker (Klik Peta)</span>
-    </div>
-    <div id="picker-output-container" class="hidden space-y-2">
-      <pre id="picker-json" class="bg-slate-950 p-3 rounded-lg text-amber-300 overflow-x-auto text-[11px] border border-slate-800 leading-relaxed"></pre>
-      <button id="btn-copy-point" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 rounded-lg transition-all text-xs">
-        📋 Copy JSON Point ke Clipboard
-      </button>
-    </div>
   </div>
 </div>
 
@@ -52,93 +117,212 @@ NE: [-6.302924, 106.758478]
   import 'leaflet/dist/leaflet.css';
   import locations from '../data/locations.json';
 
+  declare global {
+    interface Window {
+      locationDataStore: Record<string, any>;
+      openLocationDetail: (id: string) => void;
+    }
+  }
+
   function initMap() {
     const mapDiv = document.getElementById('map');
     if (!mapDiv) return;
 
-    // 1. Titik Target Utama (Pusat Gambar 1000px x 1000px)
     const centerLat = -6.306601;
     const centerLng = 106.754809;
 
-    // 2. Inisialisasi Peta & Langsung Zoom ke Titik Pusat
-    const map = L.map('map').setView([centerLat, centerLng], 17);
+    const imageOffset = 0.0036;
+    const imageBounds = L.latLngBounds([
+      [centerLat - imageOffset, centerLng - imageOffset],
+      [centerLat + imageOffset, centerLng + imageOffset]
+    ]);
+
+    const panMargin = 0.0060;
+    const maxPanBounds = L.latLngBounds([
+      [centerLat - panMargin, centerLng - panMargin],
+      [centerLat + panMargin, centerLng + panMargin]
+    ]);
+
+    const initialZoom = 17;
+    const map = L.map('map', {
+      center: [centerLat, centerLng],
+      zoom: initialZoom,
+      minZoom: initialZoom,
+      maxZoom: 19,
+      maxBounds: maxPanBounds,
+      maxBoundsViscosity: 0.7
+    });
 
     const fallback = document.getElementById('map-fallback');
     if (fallback) fallback.style.display = 'none';
 
-    // 3. OpenStreetMap Base Tile Layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // 4. MENGHITUNG BOUNDS SUPAYA CENTER PAS DI TENGAH GAMBAR 2000px x 2000px
-    // Offset ~0.0036 derajat mencakup area ~800m x 800m di sekitar UIN Jakarta
-    let offset = 0.0032;
-
-    let swLat = centerLat - offset; // Kiri-Bawah
-    let swLng = centerLng - offset;
-    let neLat = centerLat + offset; // Kanan-Atas
-    let neLng = centerLng + offset;
-
-    let bounds = L.latLngBounds([swLat, swLng], [neLat, neLng]);
-
-    // 5. Tambahkan Overlay gambar testmap.png
-    const imageUrl = '/tesmap.png';
-    const customOverlay = L.imageOverlay(imageUrl, bounds, {
-      opacity: 0.80,
+    const imageUrl = '/testmap.png';
+    L.imageOverlay(imageUrl, imageBounds, {
+      opacity: 0.9,
       interactive: false
     }).addTo(map);
 
-    // Marker penanda titik tengah persis (Center Point)
-    const centerMarker = L.marker([centerLat, centerLng]).addTo(map);
-    centerMarker.bindPopup(`<b>🎯 Pusat Peta Custom</b><br>[-6.306524, 106.754878]`).openPopup();
+    // --- RENDER MARKERS DARI JSON (SUPPORT CUSTOM ICON) ---
+    window.locationDataStore = {};
 
-    // 6. Marker Draggable untuk Penyesuaian Bounds Manual (Kalibrator)
-    const markerSW = L.marker([swLat, swLng], { draggable: true, title: 'Sudut Kiri-Bawah' }).addTo(map);
-    const markerNE = L.marker([neLat, neLng], { draggable: true, title: 'Sudut Kanan-Atas' }).addTo(map);
-
-    function updateOverlayBounds() {
-      const newSW = markerSW.getLatLng();
-      const newNE = markerNE.getLatLng();
-      const newBounds = L.latLngBounds(newSW, newNE);
-
-      customOverlay.setBounds(newBounds);
-
-      const outputText = `SW: [${newSW.lat.toFixed(6)}, ${newSW.lng.toFixed(6)}]
-NE: [${newNE.lat.toFixed(6)}, ${newNE.lng.toFixed(6)}]`;
-
-      const outputElem = document.getElementById('bounds-output');
-      if (outputElem) outputElem.innerText = outputText;
-    }
-
-    markerSW.on('drag', updateOverlayBounds);
-    markerNE.on('drag', updateOverlayBounds);
-
-    document.getElementById('btn-copy-bounds')?.addEventListener('click', () => {
-      const text = document.getElementById('bounds-output')?.innerText || '';
-      navigator.clipboard.writeText(text);
-      alert('Koordinat Bounds berhasil disalin!');
-    });
-
-    // 7. Render Semua Marker dari locations.json
     if (Array.isArray(locations)) {
       locations.forEach((loc: any) => {
+        window.locationDataStore[loc.id] = loc;
+
         const coords: [number, number] = [loc.coordinates[0], loc.coordinates[1]];
-        const marker = L.marker(coords).addTo(map);
-        marker.bindPopup(`
-          <div class="p-1">
+
+        // 🎨 KONFIGURASI CUSTOM ICON MARKER
+        let markerOptions: L.MarkerOptions = {};
+
+        if (loc.customIcon) {
+          const customMarkerIcon = L.icon({
+            iconUrl: loc.customIcon,       // e.g., "/icons/icon-rektorat.png"
+            iconSize: [40, 50],            // Ukuran ikon [lebar, tinggi]
+            iconAnchor: [20, 40],          // Tumpuan ikon di bawah
+            popupAnchor: [0, -40]           // Posisi pop-up tepat di atas ikon
+          });
+
+          markerOptions = { icon: customMarkerIcon };
+        }
+
+        // Buat Marker (pakai custom icon jika ada)
+        const marker = L.marker(coords, markerOptions).addTo(map);
+
+        const hasUnits = Array.isArray(loc.units) && loc.units.length > 0;
+        const unitBadge = hasUnits 
+          ? `<span class="mt-1 inline-block text-[10px] bg-amber-100 text-amber-800 font-semibold px-1.5 py-0.5 rounded">🏢 ${loc.units.length} Unit Layanan</span>` 
+          : '';
+
+        const popupContent = `
+          <div class="p-1 max-w-[210px]">
             <span class="inline-block bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded mb-1">${loc.category}</span>
-            <h4 class="font-bold text-slate-800 text-sm">${loc.name}</h4>
-            <p class="text-xs text-slate-600 mt-1 leading-snug">${loc.description}</p>
+            <h4 class="font-bold text-slate-800 text-sm leading-tight">${loc.name}</h4>
+            ${unitBadge}
+            <p class="text-xs text-slate-600 mt-1 line-clamp-2 leading-snug">${loc.description}</p>
+            <button 
+              onclick="openLocationDetail('${loc.id}')"
+              class="mt-2.5 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-2 rounded text-[11px] transition-all flex items-center justify-center gap-1 shadow"
+            >
+              🔍 Detail & Unit Gedung
+            </button>
           </div>
-        `);
+        `;
+
+        marker.bindPopup(popupContent);
       });
     }
 
-    // 8. POINT PICKER (Klik untuk Tambah Point Baru)
-    let tempPickerMarker: L.Marker | null = null;
+    // --- FUNGSI TAMPILKAN MODAL DETAIL ---
+    window.openLocationDetail = (locationId: string) => {
+      const data = window.locationDataStore[locationId];
+      if (!data) return;
 
+      document.getElementById('modal-title')!.innerText = data.name;
+      document.getElementById('modal-category')!.innerText = data.category;
+      document.getElementById('modal-description')!.innerText = data.description;
+      document.getElementById('modal-coords')!.innerText = `[${data.coordinates[0]}, ${data.coordinates[1]}]`;
+
+      // Set Foto Utama Gedung
+      const modalImg = document.getElementById('modal-image') as HTMLImageElement;
+      if (data.image) {
+        modalImg.src = data.image;
+      } else {
+        modalImg.src = `https://placehold.co/600x400/0f172a/ffffff?text=${encodeURIComponent(data.name)}`;
+      }
+
+      // Render Legenda (KOLOM KIRI)
+      const legendSection = document.getElementById('modal-legend-section')!;
+      const legendList = document.getElementById('modal-legend-list')!;
+      legendList.innerHTML = '';
+
+      if (Array.isArray(data.legend) && data.legend.length > 0) {
+        data.legend.forEach((lg: any) => {
+          const item = document.createElement('div');
+          item.className = "flex items-center gap-2 bg-white p-2 rounded-lg border border-slate-100 shadow-sm";
+          item.innerHTML = `<span class="text-lg">${lg.symbol}</span> <span class="text-slate-700 font-medium">${lg.label}</span>`;
+          legendList.appendChild(item);
+        });
+        legendSection.classList.remove('hidden');
+      } else {
+        legendSection.classList.add('hidden');
+      }
+
+      // Render Unit-Unit di Dalam Gedung (KOLOM KANAN)
+      const unitsSection = document.getElementById('modal-units-section')!;
+      const unitsList = document.getElementById('modal-units-list')!;
+      const unitCount = document.getElementById('modal-unit-count')!;
+      unitsList.innerHTML = '';
+
+      if (Array.isArray(data.units) && data.units.length > 0) {
+        unitCount.innerText = `${data.units.length} Unit / Pusat`;
+        
+        data.units.forEach((u: any) => {
+          const unitCard = document.createElement('div');
+          unitCard.className = "bg-slate-50 border border-slate-200 rounded-xl overflow-hidden hover:border-emerald-400 hover:bg-emerald-50/20 transition-all shadow-sm flex flex-col";
+
+          // Banner Foto Unit di Atas
+          const imageHeaderHTML = u.image 
+            ? `<div class="w-full h-36 bg-slate-200 relative overflow-hidden border-b border-slate-200">
+                <img src="${u.image}" alt="${u.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.remove();" />
+                <span class="absolute top-2 right-2 bg-emerald-700/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow">
+                  ${u.floor || 'Lantai ?'}
+                </span>
+               </div>`
+            : '';
+
+          // Logo / Ikon Unit
+          const logoHTML = `<div class="text-xl bg-white p-2 rounded-lg shadow-sm border border-slate-100 flex-shrink-0 flex items-center justify-center w-9 h-9">
+                              ${u.icon || '📍'}
+                            </div>`;
+
+          // Badge lantai di kanan jika tidak ada foto
+          const floorBadgeHTML = !u.image 
+            ? `<span class="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full flex-shrink-0">${u.floor || 'Lantai ?'}</span>` 
+            : '';
+
+          unitCard.innerHTML = `
+            ${imageHeaderHTML}
+            <div class="p-3.5 space-y-2">
+              <div class="flex items-center gap-2.5">
+                ${logoHTML}
+                <div class="flex-1 min-w-0 flex items-center justify-between gap-2">
+                  <h5 class="font-bold text-slate-800 text-sm truncate">${u.name}</h5>
+                  ${floorBadgeHTML}
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed pl-0.5">${u.description}</p>
+            </div>
+          `;
+
+          unitsList.appendChild(unitCard);
+        });
+        unitsSection.classList.remove('hidden');
+      } else {
+        unitsSection.classList.add('hidden');
+      }
+
+      // Tampilkan Modal
+      document.getElementById('detail-modal')!.classList.remove('hidden');
+    };
+
+    // Event Listener Tutup Modal
+    document.getElementById('btn-close-modal')?.addEventListener('click', () => {
+      document.getElementById('detail-modal')!.classList.add('hidden');
+    });
+
+    document.getElementById('detail-modal')?.addEventListener('click', (e) => {
+      if (e.target === document.getElementById('detail-modal')) {
+        document.getElementById('detail-modal')!.classList.add('hidden');
+      }
+    });
+
+    // --- POINT PICKER (Dev Tool) ---
+    let tempPickerMarker: L.Marker | null = null;
     map.on('click', (e: L.LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
       const latFormatted = Number(lat.toFixed(6));
@@ -146,14 +330,25 @@ NE: [${newNE.lat.toFixed(6)}, ${newNE.lng.toFixed(6)}]`;
 
       const jsonTemplate = `{
   "id": "lokasi-${Date.now().toString().slice(-4)}",
-  "name": "Nama Lokasi",
+  "name": "Nama Gedung / Tempat",
   "category": "Fasilitas",
   "coordinates": [${latFormatted}, ${lngFormatted}],
-  "description": "Deskripsi singkat."
+  "customIcon": "/icons/icon-nama.png",
+  "image": "/images/foto-gedung.jpg",
+  "description": "Deskripsi singkat gedung.",
+  "units": [
+    {
+      "id": "lokasi-${(Date.now() + 1).toString().slice(-4)}",
+      "name": "Nama Unit / Pusat",
+      "floor": "Lantai 1",
+      "icon": "📰",
+      "image": "/images/foto-unit.jpg",
+      "description": "Deskripsi singkat unit."
+    }
+  ]
 }`;
 
       if (tempPickerMarker) map.removeLayer(tempPickerMarker);
-
       tempPickerMarker = L.marker([lat, lng]).addTo(map);
       tempPickerMarker.bindPopup(`<b>📍 [${latFormatted}, ${lngFormatted}]</b>`).openPopup();
 
@@ -171,7 +366,6 @@ NE: [${newNE.lat.toFixed(6)}, ${newNE.lng.toFixed(6)}]`;
       alert('JSON Point disalin!');
     });
 
-    // Fix bug rendering tile di Leaflet
     setTimeout(() => map.invalidateSize(), 300);
   }
 

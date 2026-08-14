@@ -1,38 +1,248 @@
 [
   {
-    "id": "kantin-fst",
-    "name": "Kantin Rahasia FST",
-    "category": "Kuliner",
-    "coordinates": [-6.3070, 106.7550],
-    "description": "Kantin di belakang gedung FST, spot makan & nongkrong murah meriah mahasiswa."
+    "id": "lokasi-2289",
+    "name": "Fakultas Syariah dan Hukum",
+    "category": "Fakultas",
+    "coordinates": [-6.306893, 106.754463],
+    "customIcon": "/icon-fsh.png",
+    "description": "Fakultas Syariah dan Hukum UIN Syarif Hidayatullah Jakarta.",
+    "units": [],
+    "legend": []
   },
   {
-    "id": "gazebo-sc",
-    "name": "Gazebo Student Center",
-    "category": "Nongkrong",
-    "coordinates": [-6.3062, 106.7542],
-    "description": "Spot favorit kumpul organisasi, diskusi, dan nugas sore hari."
+    "id": "lokasi-2060",
+    "name": "Fakultas Ushuluddin",
+    "category": "Fakultas",
+    "coordinates": [-6.306911, 106.753886],
+    "customIcon": "/icon-ushuluddin.png",
+    "description": "Fakultas Ushuluddin UIN Syarif Hidayatullah Jakarta.",
+    "units": [],
+    "legend": []
   },
   {
-    "id": "parkiran-fitk",
-    "name": "Parkiran Dalam FITK",
+    "id": "lokasi-8334",
+    "name": "Fakultas Dakwah dan Ilmu Komunikasi",
+    "category": "Fakultas",
+    "coordinates": [-6.30668, 106.753621],
+    "customIcon": "/icon-fdikom.png",
+    "description": "Fakultas Dakwah dan Ilmu Komunikasi UIN Syarif Hidayatullah Jakarta.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-6282",
+    "name": "Fakultas Sains dan Teknologi",
+    "category": "Fakultas",
+    "coordinates": [-6.306184, 106.752609],
+    "customIcon": "/icon-fst.png",
+    "description": "Fakultas Sains dan Teknologi UIN Syarif Hidayatullah Jakarta.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-3311",
+    "name": "Pusat Lab Terpadu",
     "category": "Fasilitas",
-    "coordinates": [-6.3081, 106.7562],
-    "description": "Area parkir motor alternatif jika lapangan utama penuh."
+    "coordinates": [-6.30612, 106.753175],
+    "customIcon": "/icon-plt.png",
+    "description": "Fasilitas laboratorium terpadu untuk kegiatan riset dan praktikum.",
+    "units": [],
+    "legend": []
   },
   {
-    "id": "masjid-fathullah",
-    "name": "Masjid Fathullah UIN",
-    "category": "Ibadah",
-    "coordinates": [-6.3053, 106.7538],
-    "description": "Masjid utama kampus UIN Syarif Hidayatullah Jakarta."
+    "id": "lokasi-8644",
+    "name": "Gedung Perpustakaan Lama",
+    "category": "Fasilitas",
+    "coordinates": [-6.306426, 106.7532],
+    "description": "Gedung perpustakaan lama Kampus 1 UIN Jakarta.",
+    "units": [],
+    "legend": []
   },
   {
-  "id": "lokasi-1401",
-  "name": "FITK",
-  "category": "Fasilitas",
-  "coordinates": [-6.307134, 106.75595],
-  "description": "Deskripsi singkat."
-}
-  
+    "id": "lokasi-8644",
+    "name": "Gedung Perpustakaan UIN Jakarta",
+    "category": "Fasilitas",
+    "coordinates": [-6.30624, 106.753823],
+    "customIcon": "/icon-perpus.png",
+    "description": "Gedung perpustakaan Kampus 1 UIN Jakarta.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-6020",
+    "name": "Kantin Cangkir",
+    "category": "Fasilitas",
+    "coordinates": [-6.306325, 106.754232],
+    "customIcon": "/icon-cangkir.png",
+    "description": "Area pujasera dan tempat berkumpul mahasiswa di pusat Kampus 1.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-5670",
+    "name": "Masjid SC Al-Jami'ah",
+    "category": "Fasilitas",
+    "coordinates": [-6.306336, 106.754755],
+    "customIcon": "/icon-mosque.png",
+    "description": "Masjid utama Student Center untuk sarana ibadah dan kegiatan keislaman.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-5572",
+    "name": "Gedung Pusat Kegiatan Mahasiswa (PKM)",
+    "category": "Fasilitas",
+    "coordinates": [-6.306509, 106.75492],
+    "description": "Pusat sekretariat organisasi mahasiswa dan UKM Kampus 1.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-6788",
+    "name": "Lapangan SC",
+    "category": "Fasilitas",
+    "coordinates": [-6.306861, 106.754731],
+    "description": "Lapangan olahraga terbuka dan pusat kegiatan luar ruangan mahasiswa.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-5941",
+    "name": "Fakultas Ilmu Tarbiyah dan Keguruan",
+    "category": "Fakultas",
+    "coordinates": [-6.307077, 106.755375],
+     "customIcon": "/icon-rektorat.png",
+    "description": "Fakultas Ilmu Tarbiyah dan Keguruan UIN Syarif Hidayatullah Jakarta.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-9748",
+    "name": "Gedung Kemahasiswaan",
+    "category": "Fasilitas",
+    "coordinates": [-6.306162, 106.755356],
+    "customIcon": "/icon-kemhas.png",
+    "description": "Gedung pelayanan administrasi kemahasiswaan.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-9749",
+    "name": "Auditorium Harun Nasution",
+    "category": "Fasilitas",
+    "coordinates": [-6.306474, 106.75596],
+    "customIcon": "/icon-auditorium.png",
+    "description": "Aula utama kampus untuk wisuda, seminar nasional, dan acara resmi universitas.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-7916",
+    "name": "Fakultas Dirasat Islamiyah",
+    "category": "Fakultas",
+    "coordinates": [-6.306173, 106.756509],
+    "customIcon": "/icon-fdi.png",
+    "description": "Fakultas Dirasat Islamiyah UIN Syarif Hidayatullah Jakarta.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-2851",
+    "name": "Pintu Masuk Kampus 1 UIN Jakarta",
+    "category": "Akses",
+    "coordinates": [-6.30617, 106.757],
+    "description": "Gerbang utama akses masuk kendaraan dan pejalan kaki Kampus 1.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-0820",
+    "name": "Pintu Keluar Kampus 1 UIN Jakarta",
+    "category": "Akses",
+    "coordinates": [-6.307701, 106.755892],
+    "description": "Gerbang utama akses keluar kendaraan Kampus 1.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-1632",
+    "name": "UIN Jakarta Corner",
+    "category": "Fasilitas",
+    "coordinates": [-6.307455, 106.755705],
+    "customIcon": "/icon-taman.png",
+    "description": "Area santai dan spot informasi seputar Kampus UIN Jakarta.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-2398",
+    "name": "Taman Teduh",
+    "category": "Fasilitas",
+    "coordinates": [-6.307575, 106.755965],
+    "customIcon": "/icon-taman.png",
+    "description": "Area ruang terbuka hijau untuk tempat bersantai mahasiswa.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-0591",
+    "name": "Aula Madya",
+    "category": "Fasilitas",
+    "coordinates": [-6.306474, 106.755455],
+    "description": "Gedung serbaguna untuk kegiatan seminar, kajian, dan pertemuan.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-6483",
+    "name": "Taman FITK",
+    "category": "Fasilitas",
+    "coordinates": [-6.306941, 106.755005],
+    "customIcon": "/icon-taman.png",
+    "description": "Taman diskusi di sekitar lingkungan Fakultas Ilmu Tarbiyah dan Keguruan.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-5438",
+    "name": "Pintu Doraemon",
+    "category": "Akses",
+    "coordinates": [-6.307623, 106.755694],
+    "description": "Akses jalan pintas bagi pejalan kaki menuju lingkungan luar kampus.",
+    "units": [],
+    "legend": []
+  },
+  {
+    "id": "lokasi-6143",
+    "name": "Gedung Rektorat",
+    "image": "/images/rektorat.jpg",
+    "customIcon": "/icon-rektorat.png",
+    "category": "Pusat Administrasi",
+    "coordinates": [-6.30668, 106.756201],
+    "description": "Gedung utama pusat administrasi dan rektoral UIN Syarif Hidayatullah Jakarta.",
+    "units": [
+      {
+        "id": "lokasi-2423",
+        "name": "Pusat Informasi dan Humas (PIH)",
+        "floor": "Lantai 1",
+        "image": "/tesmap.png",
+        "coordinates": [-6.306759, 106.756129],
+        "icon": "📰",
+        "description": "Layanan pers, pendaftaran liputan, dokumentasi media, dan informasi publik kampus."
+      },
+      {
+        "id": "lokasi-4622",
+        "name": "Pusat Penelitian dan Penerbitan (Puslitpen)",
+        "image": "/tesmap.png",
+        "floor": "Lantai 2",
+        "coordinates": [-6.306914, 106.756051],
+        "icon": "🔬",
+        "description": "Pengelolaan riset, jurnal ilmiah, publikasi akademik, dan pengabdian masyarakat."
+      }
+    ],
+    "legend": [
+      { "symbol": "📰", "label": "Layanan Humas & Informasi" },
+      { "symbol": "🔬", "label": "Riset & Jurnal Ilmiah" }
+    ]
+  }
 ]
