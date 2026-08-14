@@ -495,7 +495,7 @@
         "id": "lokasi-2423",
         "name": "Pusat Informasi dan Humas (PIH)",
         "floor": "Lantai 1",
-        "image": "/tesmap.png",
+        "image": "/",
         "coordinates": [-6.306759, 106.756129],
         "icon": "📰",
         "description": "Layanan pers, pendaftaran liputan, dokumentasi media, dan informasi publik kampus."
@@ -504,7 +504,7 @@
         "id": "lokasi-4622",
         "name": "Pusat Penelitian dan Penerbitan (Puslitpen)",
         "floor": "Lantai 2",
-        "image": "/tesmap.png",
+        "image": "/",
         "coordinates": [-6.306914, 106.756051],
         "icon": "🔬",
         "description": "Pengelolaan riset, jurnal ilmiah, publikasi akademik, dan pengabdian masyarakat."
