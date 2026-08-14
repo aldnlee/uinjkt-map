@@ -2,7 +2,32 @@
 // src/components/CampusMap.astro
 ---
 
-<div class="relative w-full max-w-6xl mx-auto px-2 sm:px-4">
+<div class="relative w-full max-w-6xl mx-auto px-2 sm:px-4 space-y-4">
+  <!-- SEARCH BAR BOX -->
+  <div class="relative z-20 max-w-xl mx-auto">
+    <div class="relative flex items-center bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200/80 transition-all focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 overflow-hidden px-3.5 py-1.5">
+      <span class="text-slate-400 text-lg mr-2">🔍</span>
+      <input 
+        type="text" 
+        id="search-input" 
+        placeholder="Cari gedung, fakultas, lab, kantin, atau unit layanan..." 
+        class="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none py-1.5"
+        autocomplete="off"
+      />
+      <button id="btn-clear-search" class="text-slate-400 hover:text-slate-600 hidden text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full font-bold transition-all">
+        ✕
+      </button>
+    </div>
+
+    <!-- Dropdown Hasil Pencarian -->
+    <div 
+      id="search-results" 
+      class="absolute left-0 right-0 top-full mt-2 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200/90 max-h-72 overflow-y-auto hidden z-30 divide-y divide-slate-100 transition-all animate-in fade-in zoom-in-95 duration-150"
+    >
+      <!-- List hasil disuntikkan via JS -->
+    </div>
+  </div>
+
   <!-- Container Peta -->
   <div 
     id="map" 
@@ -120,7 +145,9 @@
   declare global {
     interface Window {
       locationDataStore: Record<string, any>;
+      locationMarkersStore: Record<string, L.Marker>;
       openLocationDetail: (id: string) => void;
+      focusToLocation: (id: string) => void;
     }
   }
 
@@ -144,7 +171,7 @@
     const map = L.map('map', {
       maxBounds: imageBounds,
       maxBoundsViscosity: 1.0,
-      zoomSnap: 0.1,         // Memungkinkan zoom presisi
+      zoomSnap: 0.1,
       zoomDelta: 0.5,
       maxZoom: 20
     });
@@ -174,10 +201,10 @@
     ];
 
     L.polygon([outerWorld, mapHole], {
-      color: '#cbd5e1',       // Garis batas tipis tepi SVG
+      color: '#cbd5e1',
       weight: 1,
-      fillColor: '#f8fafc',   // Warna background luar penutup OSM
-      fillOpacity: 1          // Solid 100%
+      fillColor: '#f8fafc',
+      fillOpacity: 1
     }).addTo(map);
 
     // 5. Custom Map SVG Overlay
@@ -207,6 +234,7 @@
 
     // --- RENDER MARKERS DARI JSON (SUPPORT CUSTOM ICON) ---
     window.locationDataStore = {};
+    window.locationMarkersStore = {};
 
     if (Array.isArray(locations)) {
       locations.forEach((loc: any) => {
@@ -228,6 +256,7 @@
         }
 
         const marker = L.marker(coords, markerOptions).addTo(map);
+        window.locationMarkersStore[loc.id] = marker;
 
         const hasUnits = Array.isArray(loc.units) && loc.units.length > 0;
         const unitBadge = hasUnits 
@@ -250,6 +279,122 @@
         `;
 
         marker.bindPopup(popupContent);
+      });
+    }
+
+    // --- FUNGSI FOCUS KE LOKASI HASIL PENCARIAN ---
+    window.focusToLocation = (id: string) => {
+      const loc = window.locationDataStore[id];
+      const marker = window.locationMarkersStore[id];
+      if (!loc || !marker) return;
+
+      map.flyTo([loc.coordinates[0], loc.coordinates[1]], 19, {
+        animate: true,
+        duration: 0.8
+      });
+
+      marker.openPopup();
+
+      // Sembunyikan box hasil search
+      const searchResults = document.getElementById('search-results');
+      if (searchResults) searchResults.classList.add('hidden');
+    };
+
+    // --- FITUR SMART SEARCH BAR ---
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const searchResults = document.getElementById('search-results') as HTMLDivElement;
+    const btnClearSearch = document.getElementById('btn-clear-search') as HTMLButtonElement;
+
+    if (searchInput && searchResults && btnClearSearch) {
+      searchInput.addEventListener('input', (e) => {
+        const query = (e.target as HTMLInputElement).value.trim().toLowerCase();
+
+        if (query.length === 0) {
+          searchResults.classList.add('hidden');
+          btnClearSearch.classList.add('hidden');
+          searchResults.innerHTML = '';
+          return;
+        }
+
+        btnClearSearch.classList.remove('hidden');
+
+        // Pencarian Deep: Cocokkan Nama Gedung, Kategori, atau Unit/Layanan
+        const matched = locations.filter((loc: any) => {
+          const matchGedung = loc.name.toLowerCase().includes(query);
+          const matchCategory = loc.category?.toLowerCase().includes(query);
+          const matchUnit = Array.isArray(loc.units) && loc.units.some((u: any) => 
+            u.name.toLowerCase().includes(query) || 
+            u.description?.toLowerCase().includes(query) ||
+            u.floor?.toLowerCase().includes(query)
+          );
+
+          return matchGedung || matchCategory || matchUnit;
+        });
+
+        if (matched.length === 0) {
+          searchResults.innerHTML = `
+            <div class="p-4 text-center text-xs text-slate-500 font-medium">
+              Tidak menemukan tempat atau unit dengan kata kunci "<b>${query}</b>"
+            </div>
+          `;
+        } else {
+          searchResults.innerHTML = matched.map((loc: any) => {
+            // Cek jika yang cocok adalah unit di dalamnya
+            let matchedUnitText = '';
+            if (Array.isArray(loc.units)) {
+              const matchedUnits = loc.units.filter((u: any) => 
+                u.name.toLowerCase().includes(query) || u.description?.toLowerCase().includes(query)
+              );
+              if (matchedUnits.length > 0) {
+                matchedUnitText = `
+                  <div class="mt-1 text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded flex items-center gap-1 font-medium">
+                    <span>🏢</span> ${matchedUnits[0].name} (${matchedUnits[0].floor || 'Lantai ?'})
+                  </div>
+                `;
+              }
+            }
+
+            return `
+              <div 
+                onclick="focusToLocation('${loc.id}')" 
+                class="p-3 hover:bg-slate-50 cursor-pointer transition-all flex items-start justify-between gap-3 text-left group"
+              >
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[10px] bg-slate-100 group-hover:bg-emerald-100 text-slate-600 group-hover:text-emerald-800 font-bold px-1.5 py-0.5 rounded">
+                      ${loc.category}
+                    </span>
+                    <h5 class="font-bold text-slate-800 text-xs truncate group-hover:text-emerald-700 transition-colors">
+                      ${loc.name}
+                    </h5>
+                  </div>
+                  ${matchedUnitText}
+                  <p class="text-[11px] text-slate-500 line-clamp-1 mt-0.5">${loc.description}</p>
+                </div>
+                <span class="text-slate-300 group-hover:text-emerald-600 text-xs font-bold transition-transform group-hover:translate-x-0.5">
+                  ➔
+                </span>
+              </div>
+            `;
+          }).join('');
+        }
+
+        searchResults.classList.remove('hidden');
+      });
+
+      btnClearSearch.addEventListener('click', () => {
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+        searchResults.classList.add('hidden');
+        btnClearSearch.classList.add('hidden');
+        searchInput.focus();
+      });
+
+      // Tutup dropdown hasil pencarian jika klik di luar search box
+      document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target as Node) && !searchResults.contains(e.target as Node)) {
+          searchResults.classList.add('hidden');
+        }
       });
     }
 
@@ -302,10 +447,12 @@
 
           const imageHeaderHTML = u.image 
             ? `<div class="w-full h-36 bg-slate-200 relative overflow-hidden border-b border-slate-200">
-                <img src="${u.image}" alt="${u.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.remove();" />
-                <span class="absolute top-2 right-2 bg-emerald-700/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow">
-                  ${u.floor || 'Lantai ?'}
-                </span>
+                <img 
+                  src="${u.image}" 
+                  alt="${u.name}" 
+                  class="w-full h-full object-cover" 
+                  onerror="this.parentElement.style.display='none';" 
+                />
                </div>`
             : '';
 
@@ -313,18 +460,22 @@
                               ${u.icon || '📍'}
                             </div>`;
 
-          const floorBadgeHTML = !u.image 
-            ? `<span class="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full flex-shrink-0">${u.floor || 'Lantai ?'}</span>` 
+          const floorBadgeHTML = u.floor 
+            ? `<span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full flex-shrink-0 border border-emerald-200">
+                ${u.floor}
+               </span>` 
             : '';
 
           unitCard.innerHTML = `
             ${imageHeaderHTML}
             <div class="p-3.5 space-y-2">
-              <div class="flex items-center gap-2.5">
+              <div class="flex items-start gap-2.5">
                 ${logoHTML}
-                <div class="flex-1 min-w-0 flex items-center justify-between gap-2">
-                  <h5 class="font-bold text-slate-800 text-sm truncate">${u.name}</h5>
-                  ${floorBadgeHTML}
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2">
+                    <h5 class="font-bold text-slate-800 text-sm leading-snug">${u.name}</h5>
+                    ${floorBadgeHTML}
+                  </div>
                 </div>
               </div>
               <p class="text-xs text-slate-600 leading-relaxed pl-0.5">${u.description}</p>

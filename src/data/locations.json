@@ -6,8 +6,45 @@
     "coordinates": [-6.306893, 106.754463],
     "customIcon": "/icon-fsh.png",
     "description": "Fakultas Syariah dan Hukum UIN Syarif Hidayatullah Jakarta.",
-    "units": [],
-    "legend": []
+    "units": [
+      {
+        "id": "lokasi-2289-u1",
+        "name": "LKBH, Posbakum & Loket Layanan TU",
+        "floor": "Lantai 1",
+        "icon": "⚖️",
+        "image": "/images/foto-unit.jpg",
+        "description": "Layanan konsultasi, Pos Bantuan Hukum (Posbakum), dan pelayanan administrasi tata usaha."
+      },
+      {
+        "id": "lokasi-2289-u2",
+        "name": "Ruang Dekanat & Ruang Dosen/Jurusan",
+        "floor": "Lantai 2",
+        "icon": "🏛️",
+        "image": "/images/foto-unit.jpg",
+        "description": "Pusat pimpinan fakultas, kantor dekanat, ruang dosen, dan administrasi program studi."
+      },
+      {
+        "id": "lokasi-2289-u3",
+        "name": "Constitutional & Legal Moot Court",
+        "floor": "Lantai 3",
+        "icon": "👨‍⚖️",
+        "image": "/images/foto-unit.jpg",
+        "description": "Ruang peradilan semu untuk simulasi sidang hukum perdata/pidana serta Sharia Compliance Lab."
+      },
+      {
+        "id": "lokasi-2289-u4",
+        "name": "Laboratorium Falak & Observatorium",
+        "floor": "Rooftop / Top Floor",
+        "icon": "🔭",
+        "image": "/images/foto-unit.jpg",
+        "description": "Laboratorium ilmu falak dan observatorium astronomi Islam dengan fasilitas teropong bintang/rukyatul hilal."
+      }
+    ],
+    "legend": [
+      { "symbol": "⚖️", "label": "Bantuan Hukum & Administrasi" },
+      { "symbol": "👨‍⚖️", "label": "Peradilan Semu & Compliance" },
+      { "symbol": "🔭", "label": "Lab Falak & Observatorium" }
+    ]
   },
   {
     "id": "lokasi-2060",
@@ -16,8 +53,46 @@
     "coordinates": [-6.306911, 106.753886],
     "customIcon": "/icon-ushuluddin.png",
     "description": "Fakultas Ushuluddin UIN Syarif Hidayatullah Jakarta.",
-    "units": [],
-    "legend": []
+    "units": [
+      {
+        "id": "lokasi-2060-u1",
+        "name": "Pusat Layanan Akademik/TU & Dekanat",
+        "floor": "Lantai 1",
+        "icon": "🏛️",
+        "image": "/images/foto-unit.jpg",
+        "description": "Pusat pelayanan surat-menyurat akademik, administrasi TU, dan ruang pimpinan dekanat."
+      },
+      {
+        "id": "lokasi-2060-u2",
+        "name": "Perpustakaan Khusus Ushuluddin & Ruang Munaqasyah",
+        "floor": "Lantai 2",
+        "icon": "📚",
+        "image": "/images/foto-unit.jpg",
+        "description": "Koleksi literatur keislaman klasik/kontemporer dan ruang sidang munaqasyah skripsi/tesis."
+      },
+      {
+        "id": "lokasi-2060-u3",
+        "name": "Laboratorium Ushuluddin & Smart Classroom",
+        "floor": "Lantai 3",
+        "icon": "📖",
+        "image": "/images/foto-unit.jpg",
+        "description": "Pusat riset studi Al-Qur'an dan Hadis dilengkapi sarana kelas digital interaktif."
+      },
+      {
+        "id": "lokasi-2060-u4",
+        "name": "Ruang Teater FU & Audio-Visual Room",
+        "floor": "Lantai 4",
+        "icon": "🎬",
+        "image": "/images/foto-unit.jpg",
+        "description": "Fasilitas teater mini untuk seminar fakultas, bedah buku, dan kegiatan audio-visual keilmuan."
+      }
+    ],
+    "legend": [
+      { "symbol": "🏛️", "label": "Layanan Akademik & Dekanat" },
+      { "symbol": "📚", "label": "Perpustakaan & Sidang Munaqasyah" },
+      { "symbol": "📖", "label": "Lab Al-Qur'an/Hadis & Smart Class" },
+      { "symbol": "🎬", "label": "Teater & Audio-Visual" }
+    ]
   },
   {
     "id": "lokasi-8334",
@@ -26,8 +101,45 @@
     "coordinates": [-6.30668, 106.753621],
     "customIcon": "/icon-fdikom.png",
     "description": "Fakultas Dakwah dan Ilmu Komunikasi UIN Syarif Hidayatullah Jakarta.",
-    "units": [],
-    "legend": []
+    "units": [
+      {
+        "id": "lokasi-8334-u1",
+        "name": "Layanan Akademik/TU & Studio Radio RDK FM",
+        "floor": "Lantai 1",
+        "icon": "📻",
+        "image": "/images/foto-unit.jpg",
+        "description": "Loket layanan administrasi mahasiswa dan studio siaran radio komunitas kampus RDK 107.9 FM."
+      },
+      {
+        "id": "lokasi-8334-u2",
+        "name": "Kompleks Labdakom (DNK TV, Foto & Podcast)",
+        "floor": "Lantai 2",
+        "icon": "🎥",
+        "image": "/images/foto-unit.jpg",
+        "description": "Studio produksi siaran televisi DNK TV, studio fotografi profesional, audio editing, dan rekaman podcast."
+      },
+      {
+        "id": "lokasi-8334-u3",
+        "name": "Lab PR, Redaksi Jurnalistik & Teater Samha",
+        "floor": "Lantai 3",
+        "icon": "🎙️",
+        "image": "/images/foto-unit.jpg",
+        "description": "Laboratorium Public Relations, ruang redaksi pers mahasiswa, dan auditorium Teater Prof. Dr. H. M. Samha."
+      },
+      {
+        "id": "lokasi-8334-u4",
+        "name": "Ruang Dosen & Kelas Multimedia",
+        "floor": "Lantai 4",
+        "icon": "💻",
+        "image": "/images/foto-unit.jpg",
+        "description": "Kantor tenaga pengajar/dosen dan ruang perkuliahan berbasis multimedia terintegrasi."
+      }
+    ],
+    "legend": [
+      { "symbol": "📻", "label": "Layanan TU & Studio RDK FM" },
+      { "symbol": "🎥", "label": "Studio DNK TV, Foto & Audio" },
+      { "symbol": "🎙️", "label": "Lab PR, Jurnalistik & Teater" }
+    ]
   },
   {
     "id": "lokasi-6282",
@@ -36,8 +148,37 @@
     "coordinates": [-6.306184, 106.752609],
     "customIcon": "/icon-fst.png",
     "description": "Fakultas Sains dan Teknologi UIN Syarif Hidayatullah Jakarta.",
-    "units": [],
-    "legend": []
+    "units": [
+      {
+        "id": "lokasi-6282-u1",
+        "name": "Layanan Akademik/TU & Studio PWK",
+        "floor": "Lantai 1",
+        "icon": "📐",
+        "image": "/images/foto-unit.jpg",
+        "description": "Pusat tata usaha akademik dan studio gambar/pemetaan Perencanaan Wilayah dan Kota (PWK)."
+      },
+      {
+        "id": "lokasi-6282-u2",
+        "name": "Lab TIK, Software Engineering & Data Science",
+        "floor": "Lantai 2–3",
+        "icon": "💻",
+        "image": "/images/foto-unit.jpg",
+        "description": "Laboratorium komputer tingkat lanjut untuk rekayasa perangkat lunak, AI, dan pengolahan sains data."
+      },
+      {
+        "id": "lokasi-6282-u3",
+        "name": "Workshop/Bengkel Teknik & Ruang Kelas",
+        "floor": "Lantai 4–5",
+        "icon": "⚙️",
+        "image": "/images/foto-unit.jpg",
+        "description": "Bengkel perakitan perangkat keras/hardware teknik, robotika, dan ruang perkuliahan teori."
+      }
+    ],
+    "legend": [
+      { "symbol": "📐", "label": "Layanan TU & Studio PWK" },
+      { "symbol": "💻", "label": "Lab Komputer, RPL & Data Science" },
+      { "symbol": "⚙️", "label": "Workshop Teknik & Ruang Kuliah" }
+    ]
   },
   {
     "id": "lokasi-3311",
@@ -45,26 +186,56 @@
     "category": "Fasilitas",
     "coordinates": [-6.30612, 106.753175],
     "customIcon": "/icon-plt.png",
-    "description": "Fasilitas laboratorium terpadu untuk kegiatan riset dan praktikum.",
-    "units": [],
-    "legend": []
+    "description": "Gedung Pusat Laboratorium Terpadu (PLT) untuk sarana riset dan praktikum sains.",
+    "units": [
+      {
+        "id": "lokasi-3311-u1",
+        "name": "Lab Kimia Dasar & Kimia Analitik",
+        "floor": "Lantai 1–2",
+        "icon": "🧪",
+        "image": "/images/foto-unit.jpg",
+        "description": "Fasilitas pengujian instrumen kimia modern dilengkapi AAS, XRD, GC-MS, dan spektrofotometer."
+      },
+      {
+        "id": "lokasi-3311-u2",
+        "name": "Lab Biologi, Agribisnis & Teknologi Pangan",
+        "floor": "Lantai 3–4",
+        "icon": "🔬",
+        "image": "/images/foto-unit.jpg",
+        "description": "Riset bioteknologi dan kultur jaringan dengan fasilitas Real-Time PCR serta mikroskop kamera digital."
+      },
+      {
+        "id": "lokasi-3311-u3",
+        "name": "Lab Fisika, Teknik Pertambangan & Lingkungan",
+        "floor": "Lantai 5–6",
+        "icon": "🪨",
+        "image": "/images/foto-unit.jpg",
+        "description": "Pengujian mekanika batuan, geofisika, analisis kualitas udara, serta pengolahan limbah lingkungan."
+      }
+    ],
+    "legend": [
+      { "symbol": "🧪", "label": "Lab Kimia Dasar & Analitik" },
+      { "symbol": "🔬", "label": "Lab Biologi, PCR & Pangan" },
+      { "symbol": "🪨", "label": "Lab Fisika, Tambang & Lingkungan" }
+    ]
   },
   {
     "id": "lokasi-8644",
     "name": "Gedung Perpustakaan Lama",
     "category": "Fasilitas",
     "coordinates": [-6.306426, 106.7532],
+    "customIcon": "/icon-perpus.png",
     "description": "Gedung perpustakaan lama Kampus 1 UIN Jakarta.",
     "units": [],
     "legend": []
   },
   {
-    "id": "lokasi-8644",
+    "id": "lokasi-8645",
     "name": "Gedung Perpustakaan UIN Jakarta",
     "category": "Fasilitas",
     "coordinates": [-6.30624, 106.753823],
     "customIcon": "/icon-perpus.png",
-    "description": "Gedung perpustakaan Kampus 1 UIN Jakarta.",
+    "description": "Gedung perpustakaan utama Kampus 1 UIN Syarif Hidayatullah Jakarta.",
     "units": [],
     "legend": []
   },
@@ -102,6 +273,7 @@
     "id": "lokasi-6788",
     "name": "Lapangan SC",
     "category": "Fasilitas",
+    "customIcon": "/icon-general.png",
     "coordinates": [-6.306861, 106.754731],
     "description": "Lapangan olahraga terbuka dan pusat kegiatan luar ruangan mahasiswa.",
     "units": [],
@@ -112,10 +284,74 @@
     "name": "Fakultas Ilmu Tarbiyah dan Keguruan",
     "category": "Fakultas",
     "coordinates": [-6.307077, 106.755375],
-     "customIcon": "/icon-rektorat.png",
-    "description": "Fakultas Ilmu Tarbiyah dan Keguruan UIN Syarif Hidayatullah Jakarta.",
-    "units": [],
-    "legend": []
+    "customIcon": "/icon-rektorat.png",
+    "description": "Gedung FITK Utama & Gedung Prof. Dr. Mahmud Yunus.",
+    "units": [
+      {
+        "id": "lokasi-5941-u1",
+        "name": "PTSP, Tata Usaha & Ruang Dekanat",
+        "floor": "Lantai 1",
+        "icon": "🏢",
+        "image": "/images/foto-unit.jpg",
+        "description": "Pelayanan Terpadu Satu Pintu (PTSP), persuratan akademik, dan ruang pimpinan dekanat."
+      },
+      {
+        "id": "lokasi-5941-u2",
+        "name": "Ruang Dosen & Sekretariat Prodi",
+        "floor": "Lantai 2",
+        "icon": "👥",
+        "image": "/images/foto-unit.jpg",
+        "description": "Kantor tenaga pengajar serta kantor administrasi seluruh program studi FITK."
+      },
+      {
+        "id": "lokasi-5941-u3",
+        "name": "Lab Microteaching & Lab Komputer",
+        "floor": "Lantai 3",
+        "icon": "💻",
+        "image": "/images/foto-unit.jpg",
+        "description": "Laboratorium praktik simulasi mengajar guru (microteaching) dan ruang komputer."
+      },
+      {
+        "id": "lokasi-5941-u4",
+        "name": "LPSB & Studio Podcast Edukasi",
+        "floor": "Lantai 4",
+        "icon": "🎙️",
+        "image": "/images/foto-unit.jpg",
+        "description": "Laboratorium Pengembangan Sumber Belajar (LPSB) dan studio podcast konten edukatif."
+      },
+      {
+        "id": "lokasi-5941-u5",
+        "name": "Lab MIPA & Matematika Dasar",
+        "floor": "Lantai 5",
+        "icon": "📐",
+        "image": "/images/foto-unit.jpg",
+        "description": "Laboratorium alat peraga dan sarana praktikum dasar sains MIPA dan matematika."
+      },
+      {
+        "id": "lokasi-5941-u6",
+        "name": "Smart Classroom & Kuliah Interaktif",
+        "floor": "Lantai 6–7",
+        "icon": "🖥️",
+        "image": "/images/foto-unit.jpg",
+        "description": "Ruang perkuliahan modern berteknologi smart screen dan interaksi pembelajaran digital."
+      },
+      {
+        "id": "lokasi-5941-u7",
+        "name": "Day Care / Lab PAUD",
+        "floor": "Gedung Kompleks (Lt 1)",
+        "icon": "🧸",
+        "image": "/images/foto-unit.jpg",
+        "description": "Pusat penitipan anak dan laboratorium praktik pembelajaran Pendidikan Anak Usia Dini."
+      }
+    ],
+    "legend": [
+      { "symbol": "🏢", "label": "Layanan PTSP & Dekanat" },
+      { "symbol": "💻", "label": "Lab Microteaching & Komputer" },
+      { "symbol": "🎙️", "label": "LPSB & Studio Podcast" },
+      { "symbol": "📐", "label": "Lab MIPA & Matematika" },
+      { "symbol": "🖥️", "label": "Smart Classroom (Lt 6–7)" },
+      { "symbol": "🧸", "label": "Day Care & Lab PAUD" }
+    ]
   },
   {
     "id": "lokasi-9748",
@@ -144,14 +380,44 @@
     "coordinates": [-6.306173, 106.756509],
     "customIcon": "/icon-fdi.png",
     "description": "Fakultas Dirasat Islamiyah UIN Syarif Hidayatullah Jakarta.",
-    "units": [],
-    "legend": []
+    "units": [
+      {
+        "id": "lokasi-7916-u1",
+        "name": "Layanan TU & Ruang Halaqah Turats",
+        "floor": "Lantai 1",
+        "icon": "🕌",
+        "image": "/images/foto-unit.jpg",
+        "description": "Pusat administrasi tata usaha dan aula halaqah kajian kitab kuning klasik (Turats)."
+      },
+      {
+        "id": "lokasi-7916-u2",
+        "name": "Perpustakaan Standar Al-Azhar & Lab Bahasa",
+        "floor": "Lantai 2",
+        "icon": "📚",
+        "image": "/images/foto-unit.jpg",
+        "description": "Perpustakaan kurikulum Al-Azhar Kairo dan laboratorium audio bahasa Arab."
+      },
+      {
+        "id": "lokasi-7916-u3",
+        "name": "Ruang Kelas Interaktif & Diskusi Keislaman",
+        "floor": "Lantai 3",
+        "icon": "💬",
+        "image": "/images/foto-unit.jpg",
+        "description": "Ruang perkuliahan berfasilitas digital dan ruang forum musyawarah ilmiah."
+      }
+    ],
+    "legend": [
+      { "symbol": "🕌", "label": "Layanan TU & Halaqah Turats" },
+      { "symbol": "📚", "label": "Perpustakaan Al-Azhar & Lab Bahasa" },
+      { "symbol": "💬", "label": "Kelas Interaktif & Diskusi" }
+    ]
   },
   {
     "id": "lokasi-2851",
     "name": "Pintu Masuk Kampus 1 UIN Jakarta",
     "category": "Akses",
     "coordinates": [-6.30617, 106.757],
+    "customIcon": "/icon-general.png",
     "description": "Gerbang utama akses masuk kendaraan dan pejalan kaki Kampus 1.",
     "units": [],
     "legend": []
@@ -161,6 +427,7 @@
     "name": "Pintu Keluar Kampus 1 UIN Jakarta",
     "category": "Akses",
     "coordinates": [-6.307701, 106.755892],
+    "customIcon": "/icon-general.png",
     "description": "Gerbang utama akses keluar kendaraan Kampus 1.",
     "units": [],
     "legend": []
@@ -190,6 +457,7 @@
     "name": "Aula Madya",
     "category": "Fasilitas",
     "coordinates": [-6.306474, 106.755455],
+    "customIcon": "/icon-general.png",
     "description": "Gedung serbaguna untuk kegiatan seminar, kajian, dan pertemuan.",
     "units": [],
     "legend": []
@@ -209,6 +477,7 @@
     "name": "Pintu Doraemon",
     "category": "Akses",
     "coordinates": [-6.307623, 106.755694],
+    "customIcon": "/icon-general.png",
     "description": "Akses jalan pintas bagi pejalan kaki menuju lingkungan luar kampus.",
     "units": [],
     "legend": []
@@ -234,8 +503,8 @@
       {
         "id": "lokasi-4622",
         "name": "Pusat Penelitian dan Penerbitan (Puslitpen)",
-        "image": "/tesmap.png",
         "floor": "Lantai 2",
+        "image": "/tesmap.png",
         "coordinates": [-6.306914, 106.756051],
         "icon": "🔬",
         "description": "Pengelolaan riset, jurnal ilmiah, publikasi akademik, dan pengabdian masyarakat."
@@ -247,33 +516,33 @@
     ]
   },
   {
-  "id": "lokasi-7623",
-  "name": "Taman UIN Landmark",
-  "category": "Fasilitas",
-  "coordinates": [-6.3062, 106.756107],
-  "customIcon": "/icon-taman.png",
-  "image": "/images/foto-gedung.jpg",
-  "description": "Deskripsi singkat gedung.",
-  "units": [
-    {
-      "id": "lokasi-7624",
-      "name": "Nama Unit / Pusat",
-      "floor": "Lantai 1",
-      "icon": "📰",
-      "image": "/images/foto-unit.jpg",
-      "description": "Deskripsi singkat unit."
-    }
-  ]
-},
-{
-  "id": "lokasi-7111",
-  "name": "Parkiran Bis Listrik",
-  "category": "Fasilitas",
-  "coordinates": [-6.307274, 106.7561],
-  "customIcon": "/icon-bilis.png",
-  "image": "/images/foto-gedung.jpg",
-  "description": "Deskripsi singkat gedung.",
-  "units": [
-  ]
-}
+    "id": "lokasi-7623",
+    "name": "Taman UIN Landmark",
+    "category": "Fasilitas",
+    "coordinates": [-6.3062, 106.756107],
+    "customIcon": "/icon-taman.png",
+    "image": "/images/foto-gedung.jpg",
+    "description": "Taman landmark utama di kawasan kampus UIN Jakarta.",
+    "units": []
+  },
+  {
+    "id": "lokasi-7111",
+    "name": "Parkiran Bis Listrik",
+    "category": "Fasilitas",
+    "coordinates": [-6.307274, 106.7561],
+    "customIcon": "/icon-bilis.png",
+    "image": "/images/foto-gedung.jpg",
+    "description": "Area parkir dan titik jemput armada bus listrik kampus.",
+    "units": []
+  },
+  {
+    "id": "lokasi-6228",
+    "name": "Parkir Triguna UIN Jakarta",
+    "category": "Fasilitas",
+    "coordinates": [-6.305794, 106.755865],
+    "customIcon": "/icon-general.png",
+    "image": "/images/foto-gedung.jpg",
+    "description": "Area parkir kendaraan mahasiswa dan civitas akademika Triguna.",
+    "units": []
+  }
 ]
