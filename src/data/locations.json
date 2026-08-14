@@ -244,5 +244,35 @@
       { "symbol": "📰", "label": "Layanan Humas & Informasi" },
       { "symbol": "🔬", "label": "Riset & Jurnal Ilmiah" }
     ]
-  }
+  },
+  {
+  "id": "lokasi-7623",
+  "name": "Taman UIN Landmark",
+  "category": "Fasilitas",
+  "coordinates": [-6.3062, 106.756107],
+  "customIcon": "/icon-taman.png",
+  "image": "/images/foto-gedung.jpg",
+  "description": "Deskripsi singkat gedung.",
+  "units": [
+    {
+      "id": "lokasi-7624",
+      "name": "Nama Unit / Pusat",
+      "floor": "Lantai 1",
+      "icon": "📰",
+      "image": "/images/foto-unit.jpg",
+      "description": "Deskripsi singkat unit."
+    }
+  ]
+},
+{
+  "id": "lokasi-7111",
+  "name": "Parkiran Bis Listrik",
+  "category": "Fasilitas",
+  "coordinates": [-6.307274, 106.7561],
+  "customIcon": "/icon-bilis.png",
+  "image": "/images/foto-gedung.jpg",
+  "description": "Deskripsi singkat gedung.",
+  "units": [
+  ]
+}
 ]
