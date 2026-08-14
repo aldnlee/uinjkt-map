@@ -93,6 +93,7 @@
     "name": "Gedung Pusat Kegiatan Mahasiswa (PKM)",
     "category": "Fasilitas",
     "coordinates": [-6.306509, 106.75492],
+    "customIcon": "/icon-general.png",
     "description": "Pusat sekretariat organisasi mahasiswa dan UKM Kampus 1.",
     "units": [],
     "legend": []
@@ -216,7 +217,7 @@
     "id": "lokasi-6143",
     "name": "Gedung Rektorat",
     "image": "/images/rektorat.jpg",
-    "customIcon": "/icon-rektorat.png",
+    "customIcon": "/icon-general.png",
     "category": "Pusat Administrasi",
     "coordinates": [-6.30668, 106.756201],
     "description": "Gedung utama pusat administrasi dan rektoral UIN Syarif Hidayatullah Jakarta.",

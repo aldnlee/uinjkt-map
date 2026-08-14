@@ -45,7 +45,7 @@
           <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100 aspect-video relative">
             <img 
               id="modal-image" 
-              src="/testmap.png" 
+              src="/tesmap.svg" 
               alt="Foto Lokasi" 
               class="w-full h-full object-cover"
               onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=UIN+Jakarta+Location'"
@@ -128,10 +128,11 @@
     const mapDiv = document.getElementById('map');
     if (!mapDiv) return;
 
-    const centerLat = -6.306601;
-    const centerLng = 106.754809;
+    // 1. Titik Target Utama & Ukuran Gambar
+    const centerLat = -6.3066000;
+    const centerLng = 106.754390;
 
-    const imageOffset = 0.0036;
+    const imageOffset = 0.0025;
     const imageBounds = L.latLngBounds([
       [centerLat - imageOffset, centerLng - imageOffset],
       [centerLat + imageOffset, centerLng + imageOffset]
@@ -143,6 +144,7 @@
       [centerLat + panMargin, centerLng + panMargin]
     ]);
 
+    // 2. Inisialisasi Peta
     const initialZoom = 17;
     const map = L.map('map', {
       center: [centerLat, centerLng],
@@ -156,14 +158,38 @@
     const fallback = document.getElementById('map-fallback');
     if (fallback) fallback.style.display = 'none';
 
+    // 3. Tile Base OSM
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    const imageUrl = '/testmap.png';
+    // 4. MASKING POLYGON (Menutup peta OSM di luar area tesmap.svg)
+    const outerWorld: L.LatLngTuple[] = [
+      [-90, -180],
+      [90, -180],
+      [90, 180],
+      [-90, 180]
+    ];
+
+    const mapHole: L.LatLngTuple[] = [
+      [centerLat - imageOffset, centerLng - imageOffset], // Sudut Kiri-Bawah (SW)
+      [centerLat - imageOffset, centerLng + imageOffset], // Sudut Kanan-Bawah (SE)
+      [centerLat + imageOffset, centerLng + imageOffset], // Sudut Kanan-Atas (NE)
+      [centerLat + imageOffset, centerLng - imageOffset]  // Sudut Kiri-Atas (NW)
+    ];
+
+    L.polygon([outerWorld, mapHole], {
+      color: '#cbd5e1',       // Garis batas tipis sekeliling gambar
+      weight: 1,
+      fillColor: '#f8fafc',   // Warna background penutup (sesuai tema web)
+      fillOpacity: 1          // Menutup solid 100%
+    }).addTo(map);
+
+    // 5. Custom Map SVG Overlay
+    const imageUrl = '/tesmap.svg';
     L.imageOverlay(imageUrl, imageBounds, {
-      opacity: 0.9,
+      opacity: 1.0,
       interactive: false
     }).addTo(map);
 
@@ -176,21 +202,21 @@
 
         const coords: [number, number] = [loc.coordinates[0], loc.coordinates[1]];
 
-        // 🎨 KONFIGURASI CUSTOM ICON MARKER
+        // 🎨 Konfigurasi Custom Icon Marker
         let markerOptions: L.MarkerOptions = {};
 
         if (loc.customIcon) {
           const customMarkerIcon = L.icon({
             iconUrl: loc.customIcon,       // e.g., "/icons/icon-rektorat.png"
             iconSize: [40, 50],            // Ukuran ikon [lebar, tinggi]
-            iconAnchor: [20, 40],          // Tumpuan ikon di bawah
-            popupAnchor: [0, -40]           // Posisi pop-up tepat di atas ikon
+            iconAnchor: [20, 50],          // Tumpuan ikon di bawah
+            popupAnchor: [0, -50]          // Posisi pop-up tepat di atas ikon
           });
 
           markerOptions = { icon: customMarkerIcon };
         }
 
-        // Buat Marker (pakai custom icon jika ada)
+        // Buat Marker
         const marker = L.marker(coords, markerOptions).addTo(map);
 
         const hasUnits = Array.isArray(loc.units) && loc.units.length > 0;
