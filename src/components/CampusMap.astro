@@ -45,7 +45,7 @@
           <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100 aspect-video relative">
             <img 
               id="modal-image" 
-              src="/tesmap.svg" 
+              src="/map-uin.svg" 
               alt="Foto Lokasi" 
               class="w-full h-full object-cover"
               onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=UIN+Jakarta+Location'"
@@ -128,66 +128,39 @@
     const mapDiv = document.getElementById('map');
     if (!mapDiv) return;
 
-    // 1. Titik Target Utama & Ukuran Gambar
-    const centerLat = -6.3066000;
-    const centerLng = 106.754390;
+    // 1. Titik Target Utama & Offset Gambar
+    const centerLat = -6.3064000;
+    const centerLng = 106.754790;
 
-    const imageOffset = 0.0025;
+    const latOffset = 0.0040; 
+    const lngOffset = 0.0060; 
+
     const imageBounds = L.latLngBounds([
-      [centerLat - imageOffset, centerLng - imageOffset],
-      [centerLat + imageOffset, centerLng + imageOffset]
+      [centerLat - latOffset, centerLng - lngOffset], // SW (Kiri Bawah)
+      [centerLat + latOffset, centerLng + lngOffset]  // NE (Kanan Atas)
     ]);
 
-    const panMargin = 0.0060;
-    const maxPanBounds = L.latLngBounds([
-      [centerLat - panMargin, centerLng - panMargin],
-      [centerLat + panMargin, centerLng + panMargin]
-    ]);
-
-    // 2. Inisialisasi Peta
-    const initialZoom = 17;
+    // 2. Inisialisasi Peta & Langsung Fit ke Bounds SVG
     const map = L.map('map', {
-      center: [centerLat, centerLng],
-      zoom: initialZoom,
-      minZoom: initialZoom,
-      maxZoom: 19,
-      maxBounds: maxPanBounds,
-      maxBoundsViscosity: 0.7
+      maxBounds: imageBounds,
+      maxBoundsViscosity: 0.8,
+      maxZoom: 20,
+      minZoom: 16
     });
+
+    map.fitBounds(imageBounds);
 
     const fallback = document.getElementById('map-fallback');
     if (fallback) fallback.style.display = 'none';
 
     // 3. Tile Base OSM
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
+      maxZoom: 20,
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // 4. MASKING POLYGON (Menutup peta OSM di luar area tesmap.svg)
-    const outerWorld: L.LatLngTuple[] = [
-      [-90, -180],
-      [90, -180],
-      [90, 180],
-      [-90, 180]
-    ];
-
-    const mapHole: L.LatLngTuple[] = [
-      [centerLat - imageOffset, centerLng - imageOffset], // Sudut Kiri-Bawah (SW)
-      [centerLat - imageOffset, centerLng + imageOffset], // Sudut Kanan-Bawah (SE)
-      [centerLat + imageOffset, centerLng + imageOffset], // Sudut Kanan-Atas (NE)
-      [centerLat + imageOffset, centerLng - imageOffset]  // Sudut Kiri-Atas (NW)
-    ];
-
-    L.polygon([outerWorld, mapHole], {
-      color: '#cbd5e1',       // Garis batas tipis sekeliling gambar
-      weight: 1,
-      fillColor: '#f8fafc',   // Warna background penutup (sesuai tema web)
-      fillOpacity: 1          // Menutup solid 100%
-    }).addTo(map);
-
-    // 5. Custom Map SVG Overlay
-    const imageUrl = '/tesmap.svg';
+    // 4. Custom Map SVG Overlay (Masking Poligon Dihapus)
+    const imageUrl = '/map-uin.svg';
     L.imageOverlay(imageUrl, imageBounds, {
       opacity: 1.0,
       interactive: false
@@ -202,15 +175,15 @@
 
         const coords: [number, number] = [loc.coordinates[0], loc.coordinates[1]];
 
-        // 🎨 Konfigurasi Custom Icon Marker
+        // Konfigurasi Custom Icon Marker
         let markerOptions: L.MarkerOptions = {};
 
         if (loc.customIcon) {
           const customMarkerIcon = L.icon({
-            iconUrl: loc.customIcon,       // e.g., "/icons/icon-rektorat.png"
-            iconSize: [40, 50],            // Ukuran ikon [lebar, tinggi]
-            iconAnchor: [20, 50],          // Tumpuan ikon di bawah
-            popupAnchor: [0, -50]          // Posisi pop-up tepat di atas ikon
+            iconUrl: loc.customIcon,
+            iconSize: [40, 50],
+            iconAnchor: [20, 50],
+            popupAnchor: [0, -50]
           });
 
           markerOptions = { icon: customMarkerIcon };
