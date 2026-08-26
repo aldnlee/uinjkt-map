@@ -5,7 +5,7 @@
 <div class="relative w-full max-w-6xl mx-auto px-2 sm:px-4 space-y-4">
   <!-- SEARCH BAR BOX -->
   <div class="relative z-20 max-w-xl mx-auto">
-    <div class="relative flex items-center bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200/80 transition-all focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 overflow-hidden px-3.5 py-1.5">
+    <div class="relative flex items-center bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200/80 transition-all focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500 overflow-hidden px-3.5 py-1.5">
       <span class="text-slate-400 text-lg mr-2">🔍</span>
       <input 
         type="text" 
@@ -23,20 +23,33 @@
     <div 
       id="search-results" 
       class="absolute left-0 right-0 top-full mt-2 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200/90 max-h-72 overflow-y-auto hidden z-30 divide-y divide-slate-100 transition-all animate-in fade-in zoom-in-95 duration-150"
-    >
-      <!-- List hasil disuntikkan via JS -->
-    </div>
+    ></div>
   </div>
 
-  <!-- Container Peta -->
-  <div 
-    id="map" 
-    class="w-full rounded-2xl shadow-2xl border border-slate-300 bg-slate-200 z-0 relative overflow-hidden" 
-    style="height: 600px; min-height: 600px;"
-  >
-    <div id="map-fallback" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 z-[10] p-6 text-center">
-      <div class="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-      <p class="font-semibold text-slate-700">Sedang memuat peta UIN Jakarta...</p>
+  <!-- Container Peta & Tombol Live Sync -->
+  <div class="relative">
+    <div 
+      id="map" 
+      class="w-full rounded-2xl shadow-2xl border border-slate-300 bg-slate-200 z-0 relative overflow-hidden" 
+      style="height: 600px; min-height: 600px;"
+    >
+      <div id="map-fallback" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 z-[10] p-6 text-center">
+        <div class="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="font-semibold text-slate-700">Sedang memuat peta UIN Jakarta...</p>
+      </div>
+    </div>
+
+    <!-- TOMBOL SYNC / LIVE GPS TRACKER -->
+    <div class="absolute bottom-6 right-6 z-[600] flex flex-col gap-2">
+      <button 
+        id="btn-sync-gps" 
+        title="Sync Lokasi Real-time" 
+        class="bg-white hover:bg-slate-50 text-slate-700 hover:text-emerald-600 font-semibold px-3.5 py-2.5 rounded-2xl shadow-2xl border border-slate-200/90 transition-all active:scale-95 flex items-center gap-2 group"
+      >
+        <span id="sync-icon" class="text-base">📡</span>
+        <span id="sync-text" class="text-xs font-bold text-slate-700 group-hover:text-emerald-600">Sync Lokasi</span>
+        <span id="sync-indicator" class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
+      </button>
     </div>
   </div>
 
@@ -63,24 +76,21 @@
       <!-- Modal Body (2 Kolom Grid) -->
       <div class="p-4 sm:p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-12 gap-6 text-slate-700">
         
-        <!-- ================= KOLOM KIRI: FOTO UTAMA & LEGENDA ================= -->
+        <!-- KOLOM KIRI: FOTO UTAMA & LEGENDA -->
         <div class="md:col-span-5 space-y-4 border-b md:border-b-0 md:border-r border-slate-200 pb-4 md:pb-0 md:pr-6">
-          
-          <!-- Foto Utama Gedung -->
           <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100 aspect-video relative">
             <img 
               id="modal-image" 
               src="/map-uin.svg" 
               alt="Foto Lokasi" 
               class="w-full h-full object-cover"
-              onerror="this.src='https://placehold.co/600x400/0f172a/435B45?text=UIN+Jakarta+Location'"
+              onerror="this.src='https://placehold.co/600x400/0f172a/ffffff?text=UIN+Jakarta+Location'"
             />
             <span class="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded">
               📸 Tampilan Gedung
             </span>
           </div>
 
-          <!-- Legenda Simbol / Layanan -->
           <div id="modal-legend-section" class="hidden bg-slate-50 p-4 rounded-xl border border-slate-200">
             <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
               <span>📌</span> Legenda & Simbol Layanan
@@ -88,23 +98,19 @@
             <div id="modal-legend-list" class="space-y-2 text-xs"></div>
           </div>
 
-          <!-- Info Koordinat GPS -->
           <div class="bg-slate-900 text-slate-300 p-3 rounded-xl text-[11px] font-mono border border-slate-800">
             <span class="text-amber-400 font-bold block mb-0.5">🌐 Koordinat GPS:</span>
             <span id="modal-coords">[-6.00000, 106.00000]</span>
           </div>
         </div>
 
-        <!-- ================= KOLOM KANAN: DETAIL & LIST UNIT ================= -->
+        <!-- KOLOM KANAN: DETAIL & LIST UNIT -->
         <div class="md:col-span-7 space-y-5">
-          
-          <!-- Deskripsi Gedung -->
           <div>
             <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Tentang Gedung / Tempat</h3>
             <p id="modal-description" class="text-sm leading-relaxed text-slate-600 bg-slate-50/80 p-3.5 rounded-xl border border-slate-100"></p>
           </div>
 
-          <!-- Daftar Unit & Pusat Layanan -->
           <div id="modal-units-section" class="hidden">
             <div class="flex items-center justify-between mb-2.5">
               <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">🏢 Unit & Pusat Layanan di Dalam Gedung</h3>
@@ -115,7 +121,6 @@
             
             <div id="modal-units-list" class="space-y-4 max-h-[360px] overflow-y-auto pr-1"></div>
           </div>
-
         </div>
 
       </div>
@@ -126,16 +131,35 @@
       </div>
     </div>
   </div>
-
-  <!-- POINT PICKER DEV TOOL (Opsional) -->
-  <div id="picker-output-container" class="mt-4 p-4 bg-slate-900 text-slate-100 rounded-xl text-xs font-mono shadow-lg border border-slate-800 hidden space-y-2">
-    <span class="font-bold text-amber-400 border-b border-slate-800 pb-1 block">📍 JSON Point Picker</span>
-    <pre id="picker-json" class="bg-slate-950 p-3 rounded-lg text-amber-300 overflow-x-auto text-[11px] border border-slate-800 leading-relaxed"></pre>
-    <button id="btn-copy-point" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2 rounded-lg transition-all text-xs">
-      📋 Copy JSON Point ke Clipboard
-    </button>
-  </div>
 </div>
+
+<style is:global>
+  /* Animasi Denyut Titik GPS */
+  @keyframes gpsPulse {
+    0% {
+      transform: scale(0.9);
+      box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
+    }
+    70% {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 14px rgba(37, 99, 235, 0);
+    }
+    100% {
+      transform: scale(0.9);
+      box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+    }
+  }
+
+  .gps-user-beacon {
+    width: 16px;
+    height: 16px;
+    background-color: #2563eb;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    animation: gpsPulse 1.8s infinite;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+</style>
 
 <script>
   import L from 'leaflet';
@@ -163,11 +187,11 @@
     const lngOffset = 0.0060; 
 
     const imageBounds = L.latLngBounds([
-      [centerLat - latOffset, centerLng - lngOffset], // SW
-      [centerLat + latOffset, centerLng + lngOffset]  // NE
+      [centerLat - latOffset, centerLng - lngOffset],
+      [centerLat + latOffset, centerLng + lngOffset]
     ]);
 
-    // 2. Inisialisasi Peta dengan Fractional Zoom
+    // 2. Inisialisasi Peta
     const map = L.map('map', {
       maxBounds: imageBounds,
       maxBoundsViscosity: 1.0,
@@ -175,6 +199,10 @@
       zoomDelta: 0.5,
       maxZoom: 20
     });
+
+    // 🛡️ PANE KHUSUS TITIK GPS: Z-INDEX 700 (DI ATAS SEMUA MASKING & MARKER LAIN)
+    map.createPane('userLocationPane');
+    map.getPane('userLocationPane')!.style.zIndex = '700';
 
     const fallback = document.getElementById('map-fallback');
     if (fallback) fallback.style.display = 'none';
@@ -185,7 +213,7 @@
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // 4. MASKING POLYGON (Menutup peta OSM di luar batas gambar SVG)
+    // 4. MASKING POLYGON (DI PANE DEFAULT OVERLAY - Z-INDEX 400)
     const outerWorld: L.LatLngTuple[] = [
       [-90, -180],
       [90, -180],
@@ -194,16 +222,16 @@
     ];
 
     const mapHole: L.LatLngTuple[] = [
-      [centerLat - latOffset, centerLng - lngOffset], // SW
-      [centerLat - latOffset, centerLng + lngOffset], // SE
-      [centerLat + latOffset, centerLng + lngOffset], // NE
-      [centerLat + latOffset, centerLng - lngOffset]  // NW
+      [centerLat - latOffset, centerLng - lngOffset],
+      [centerLat - latOffset, centerLng + lngOffset],
+      [centerLat + latOffset, centerLng + lngOffset],
+      [centerLat + latOffset, centerLng - lngOffset]
     ];
 
     L.polygon([outerWorld, mapHole], {
-      color: '#435B45',
+      color: '#cbd5e1',
       weight: 1,
-      fillColor: '#435B45',
+      fillColor: '#f8fafc',
       fillOpacity: 1
     }).addTo(map);
 
@@ -214,7 +242,7 @@
       interactive: false
     }).addTo(map);
 
-    // 🚀 FIT OTOMATIS & LANGSUNG PAS DI LAYAR
+    // 🚀 FIT OTOMATIS
     const applyExactFit = () => {
       map.invalidateSize();
       map.fitBounds(imageBounds, {
@@ -232,7 +260,101 @@
       setTimeout(applyExactFit, 100);
     });
 
-    // --- RENDER MARKERS DARI JSON (SUPPORT CUSTOM ICON) ---
+    // --- FITUR LIVE SYNC GPS TRACKER ---
+    let userMarker: L.Marker | null = null;
+    let userAccuracyCircle: L.Circle | null = null;
+    let watchId: number | null = null;
+    let isTracking = false;
+
+    const btnSync = document.getElementById('btn-sync-gps');
+    const syncIndicator = document.getElementById('sync-indicator');
+    const syncText = document.getElementById('sync-text');
+
+    // Buat Icon Custom Berdenyut
+    const beaconIcon = L.divIcon({
+      className: '',
+      html: '<div class="gps-user-beacon"></div>',
+      iconSize: [16, 16],
+      iconAnchor: [8, 8]
+    });
+
+    const updateGPSLocation = (pos: GeolocationPosition, autoCenter = false) => {
+      const { latitude, longitude, accuracy } = pos.coords;
+
+      // Update / Buat Lingkaran Akurasi
+      if (!userAccuracyCircle) {
+        userAccuracyCircle = L.circle([latitude, longitude], {
+          pane: 'userLocationPane',
+          radius: Math.min(accuracy, 45),
+          color: '#3b82f6',
+          fillColor: '#60a5fa',
+          fillOpacity: 0.2,
+          weight: 1.5
+        }).addTo(map);
+      } else {
+        userAccuracyCircle.setLatLng([latitude, longitude]);
+        userAccuracyCircle.setRadius(Math.min(accuracy, 45));
+      }
+
+      // Update / Buat Titik Marker User
+      if (!userMarker) {
+        userMarker = L.marker([latitude, longitude], {
+          icon: beaconIcon,
+          pane: 'userLocationPane'
+        }).addTo(map);
+
+        userMarker.bindPopup('<b class="text-xs">📍 Posisi Anda Saat Ini</b>');
+      } else {
+        userMarker.setLatLng([latitude, longitude]);
+      }
+
+      if (autoCenter) {
+        map.flyTo([latitude, longitude], 19, { animate: true, duration: 1 });
+      }
+    };
+
+    btnSync?.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Browser Anda tidak mendukung fitur Geolocation.');
+        return;
+      }
+
+      if (isTracking) {
+        // Stop Tracking
+        if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+        isTracking = false;
+
+        if (syncIndicator) syncIndicator.className = 'w-2.5 h-2.5 rounded-full bg-slate-300';
+        if (syncText) syncText.innerText = 'Sync Lokasi';
+      } else {
+        // Start Live Tracking
+        isTracking = true;
+        if (syncIndicator) syncIndicator.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping';
+        if (syncText) syncText.innerText = 'Live Synced';
+
+        // Panggilan awal untuk instan center
+        navigator.geolocation.getCurrentPosition(
+          (pos) => updateGPSLocation(pos, true),
+          (err) => {
+            alert('Gagal membaca GPS: ' + err.message);
+            isTracking = false;
+            if (syncIndicator) syncIndicator.className = 'w-2.5 h-2.5 rounded-full bg-slate-300';
+            if (syncText) syncText.innerText = 'Sync Lokasi';
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+
+        // Pantau pergerakan terus menerus
+        watchId = navigator.geolocation.watchPosition(
+          (pos) => updateGPSLocation(pos, false),
+          (err) => console.warn('GPS Watch error:', err.message),
+          { enableHighAccuracy: true, maximumAge: 3000 }
+        );
+      }
+    });
+
+    // --- RENDER MARKERS DARI JSON ---
     window.locationDataStore = {};
     window.locationMarkersStore = {};
 
@@ -241,7 +363,6 @@
         window.locationDataStore[loc.id] = loc;
 
         const coords: [number, number] = [loc.coordinates[0], loc.coordinates[1]];
-
         let markerOptions: L.MarkerOptions = {};
 
         if (loc.customIcon) {
@@ -282,7 +403,7 @@
       });
     }
 
-    // --- FUNGSI FOCUS KE LOKASI HASIL PENCARIAN ---
+    // --- FOCUS KE LOKASI SEARCH ---
     window.focusToLocation = (id: string) => {
       const loc = window.locationDataStore[id];
       const marker = window.locationMarkersStore[id];
@@ -294,13 +415,11 @@
       });
 
       marker.openPopup();
-
-      // Sembunyikan box hasil search
       const searchResults = document.getElementById('search-results');
       if (searchResults) searchResults.classList.add('hidden');
     };
 
-    // --- FITUR SMART SEARCH BAR ---
+    // --- SEARCH BAR LOGIC ---
     const searchInput = document.getElementById('search-input') as HTMLInputElement;
     const searchResults = document.getElementById('search-results') as HTMLDivElement;
     const btnClearSearch = document.getElementById('btn-clear-search') as HTMLButtonElement;
@@ -318,7 +437,6 @@
 
         btnClearSearch.classList.remove('hidden');
 
-        // Pencarian Deep: Cocokkan Nama Gedung, Kategori, atau Unit/Layanan
         const matched = locations.filter((loc: any) => {
           const matchGedung = loc.name.toLowerCase().includes(query);
           const matchCategory = loc.category?.toLowerCase().includes(query);
@@ -339,7 +457,6 @@
           `;
         } else {
           searchResults.innerHTML = matched.map((loc: any) => {
-            // Cek jika yang cocok adalah unit di dalamnya
             let matchedUnitText = '';
             if (Array.isArray(loc.units)) {
               const matchedUnits = loc.units.filter((u: any) => 
@@ -390,7 +507,6 @@
         searchInput.focus();
       });
 
-      // Tutup dropdown hasil pencarian jika klik di luar search box
       document.addEventListener('click', (e) => {
         if (!searchInput.contains(e.target as Node) && !searchResults.contains(e.target as Node)) {
           searchResults.classList.add('hidden');
@@ -398,7 +514,7 @@
       });
     }
 
-    // --- FUNGSI TAMPILKAN MODAL DETAIL ---
+    // --- MODAL DETAIL ---
     window.openLocationDetail = (locationId: string) => {
       const data = window.locationDataStore[locationId];
       if (!data) return;
@@ -415,7 +531,7 @@
         modalImg.src = `https://placehold.co/600x400/0f172a/ffffff?text=${encodeURIComponent(data.name)}`;
       }
 
-      // Render Legenda (KOLOM KIRI)
+      // Render Legenda
       const legendSection = document.getElementById('modal-legend-section')!;
       const legendList = document.getElementById('modal-legend-list')!;
       legendList.innerHTML = '';
@@ -432,7 +548,7 @@
         legendSection.classList.add('hidden');
       }
 
-      // Render Unit-Unit (KOLOM KANAN)
+      // Render Unit-Unit
       const unitsSection = document.getElementById('modal-units-section')!;
       const unitsList = document.getElementById('modal-units-list')!;
       const unitCount = document.getElementById('modal-unit-count')!;
@@ -492,7 +608,6 @@
       document.getElementById('detail-modal')!.classList.remove('hidden');
     };
 
-    // Event Listener Tutup Modal
     document.getElementById('btn-close-modal')?.addEventListener('click', () => {
       document.getElementById('detail-modal')!.classList.add('hidden');
     });
@@ -501,51 +616,6 @@
       if (e.target === document.getElementById('detail-modal')) {
         document.getElementById('detail-modal')!.classList.add('hidden');
       }
-    });
-
-    // --- POINT PICKER (Dev Tool) ---
-    let tempPickerMarker: L.Marker | null = null;
-    map.on('click', (e: L.LeafletMouseEvent) => {
-      const { lat, lng } = e.latlng;
-      const latFormatted = Number(lat.toFixed(6));
-      const lngFormatted = Number(lng.toFixed(6));
-
-      const jsonTemplate = `{
-  "id": "lokasi-${Date.now().toString().slice(-4)}",
-  "name": "Nama Gedung / Tempat",
-  "category": "Fasilitas",
-  "coordinates": [${latFormatted}, ${lngFormatted}],
-  "customIcon": "/icons/icon-nama.png",
-  "image": "/images/foto-gedung.jpg",
-  "description": "Deskripsi singkat gedung.",
-  "units": [
-    {
-      "id": "lokasi-${(Date.now() + 1).toString().slice(-4)}",
-      "name": "Nama Unit / Pusat",
-      "floor": "Lantai 1",
-      "icon": "📰",
-      "image": "/images/foto-unit.jpg",
-      "description": "Deskripsi singkat unit."
-    }
-  ]
-}`;
-
-      if (tempPickerMarker) map.removeLayer(tempPickerMarker);
-      tempPickerMarker = L.marker([lat, lng]).addTo(map);
-      tempPickerMarker.bindPopup(`<b>📍 [${latFormatted}, ${lngFormatted}]</b>`).openPopup();
-
-      const container = document.getElementById('picker-output-container');
-      const jsonBox = document.getElementById('picker-json');
-      if (container && jsonBox) {
-        container.classList.remove('hidden');
-        jsonBox.innerText = jsonTemplate;
-      }
-    });
-
-    document.getElementById('btn-copy-point')?.addEventListener('click', () => {
-      const text = document.getElementById('picker-json')?.innerText || '';
-      navigator.clipboard.writeText(text);
-      alert('JSON Point disalin!');
     });
   }
 
