@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peta Interaktif Kampus</title>
+  
+  <!-- Tailwind CSS & Leaflet CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  
+  <style>
+    #map-wrapper {
+      width: 1080px;
+      height: 1350px;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen p-4">
+
+  <!-- Container Poster 1080x1350 -->
+  <div id="map-wrapper" class="relative rounded-3xl shadow-2xl overflow-hidden bg-slate-100 border border-slate-700 flex flex-col">
+    
+    <!-- Floating Header & Search Bar -->
+    <div class="absolute top-6 left-6 right-6 z-[500] space-y-3 pointer-events-none">
+      <div class="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl border border-slate-700/80 text-white shadow-xl pointer-events-auto">
+        <h1 class="text-xl font-bold tracking-tight text-emerald-400">Peta Interaktif Kampus</h1>
+        <p class="text-xs text-slate-300">Navigasi gedung, ruang kuliah, laboratorium, dan fasilitas kampus.</p>
+      </div>
+
+      <!-- Search Input Box -->
+      <div class="relative pointer-events-auto">
+        <div class="flex items-center bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200 px-4 py-2">
+          <span class="text-slate-400 text-base mr-2.5">🔍</span>
+          <input 
+            type="text" 
+            id="search-input" 
+            placeholder="Cari gedung, fakultas, lab, atau unit layanan..." 
+            class="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none py-1"
+            autocomplete="off"
+          />
+          <button id="btn-clear-search" class="text-slate-400 hover:text-slate-600 hidden text-xs bg-slate-100 px-2 py-1 rounded-full font-bold">
+            ✕
+          </button>
+        </div>
+
+        <!-- Dropdown Hasil Pencarian -->
+        <div 
+          id="search-results" 
+          class="absolute left-0 right-0 top-full mt-2 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-200 max-h-64 overflow-y-auto hidden divide-y divide-slate-100"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Tombol GPS Lokasi Saya -->
+    <button 
+      id="btn-locate-me" 
+      class="absolute bottom-8 right-8 z-[500] bg-white hover:bg-slate-50 text-slate-800 font-bold px-4 py-3 rounded-2xl shadow-2xl border border-slate-200 flex items-center gap-2 transition-all active:scale-95"
+    >
+      <span class="text-lg">📍</span>
+      <span class="text-xs">Lokasi Saya</span>
+    </button>
+
+    <!-- Map Canvas -->
+    <div id="map"></div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <script>
+    // Data Lokasi Kampus
+    const locations = [
+      {
+        id: "lokasi-2289",
+        name: "Fakultas Syariah dan Hukum",
+        category: "Fakultas",
+        coordinates: [-6.306893, 106.754463],
+        description: "Fakultas Syariah dan Hukum UIN Syarif Hidayatullah Jakarta.",
+        units: [
+          { name: "LKBH & Posbakum", floor: "Lantai 1" },
+          { name: "Moot Court & Sharia Compliance", floor: "Lantai 3" }
+        ]
+      },
+      {
+        id: "lokasi-2060",
+        name: "Fakultas Ushuluddin",
+        category: "Fakultas",
+        coordinates: [-6.306911, 106.753886],
+        description: "Fakultas Ushuluddin UIN Syarif Hidayatullah Jakarta.",
+        units: [
+          { name: "Perpustakaan Khusus Ushuluddin", floor: "Lantai 2" },
+          { name: "Lab Al-Qur'an & Hadis", floor: "Lantai 3" }
+        ]
+      },
+      {
+        id: "lokasi-8334",
+        name: "Fakultas Dakwah dan Ilmu Komunikasi",
+        category: "Fakultas",
+        coordinates: [-6.30668, 106.753621],
+        description: "Fakultas Dakwah dan Ilmu Komunikasi UIN Syarif Hidayatullah Jakarta.",
+        units: [
+          { name: "Studio RDK 107.9 FM", floor: "Lantai 1" },
+          { name: "Studio DNK TV & Podcast", floor: "Lantai 2" }
+        ]
+      },
+      {
+        id: "lokasi-6282",
+        name: "Fakultas Sains dan Teknologi",
+        category: "Fakultas",
+        coordinates: [-6.306184, 106.752609],
+        description: "Fakultas Sains dan Teknologi UIN Syarif Hidayatullah Jakarta.",
+        units: [
+          { name: "Studio PWK", floor: "Lantai 1" },
+          { name: "Lab Software Engineering & Data Science", floor: "Lantai 2-3" }
+        ]
+      },
+      {
+        id: "lokasi-3311",
+        name: "Pusat Lab Terpadu",
+        category: "Fasilitas",
+        coordinates: [-6.30612, 106.753175],
+        description: "Gedung Pusat Laboratorium Terpadu riset dan praktikum sains.",
+        units: [
+          { name: "Lab Kimia Dasar & Analitik", floor: "Lantai 1-2" },
+          { name: "Lab Biologi, PCR & Kultur Jaringan", floor: "Lantai 3-4" }
+        ]
+      },
+      {
+        id: "lokasi-6143",
+        name: "Gedung Rektorat",
+        category: "Pusat Administrasi",
+        coordinates: [-6.30668, 106.756201],
+        description: "Gedung utama pusat administrasi universitas.",
+        units: [
+          { name: "Pusat Informasi dan Humas (PIH)", floor: "Lantai 1" },
+          { name: "Pusat Penelitian dan Penerbitan (Puslitpen)", floor: "Lantai 2" }
+        ]
+      }
+    ];
+
+    // 1. Parameter Koordinat & Bounds
+    const centerLat = -6.306650;
+    const centerLng = 106.754790;
+    const latOffset = 0.0035;
+    const lngOffset = 0.00656;
+
+    const imageBounds = L.latLngBounds([
+      [centerLat - latOffset, centerLng - lngOffset],
+      [centerLat + latOffset, centerLng + lngOffset]
+    ]);
+
+    // 2. Inisialisasi Peta Leaflet
+    const map = L.map('map', {
+      maxBounds: imageBounds,
+      maxBoundsViscosity: 1.0,
+      zoomSnap: 0.05,
+      zoomDelta: 0.5,
+      maxZoom: 20
+    });
+
+    // Custom Pane untuk Titik GPS (di atas layer overlay gambar)
+    map.createPane('userLocationPane');
+    map.getPane('userLocationPane').style.zIndex = '620';
+
+    // Base Layer OSM
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 20,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Masking Area Luar Peta
+    const outerWorld = [
+      [-90, -180],
+      [90, -180],
+      [90, 180],
+      [-90, 180]
+    ];
+    const mapHole = [
+      [centerLat - latOffset, centerLng - lngOffset],
+      [centerLat - latOffset, centerLng + lngOffset],
+      [centerLat + latOffset, centerLng + lngOffset],
+      [centerLat + latOffset, centerLng - lngOffset]
+    ];
+    L.polygon([outerWorld, mapHole], {
+      color: '#cbd5e1',
+      weight: 1,
+      fillColor: '#f8fafc',
+      fillOpacity: 1
+    }).addTo(map);
+
+    // Custom SVG Overlay
+    const imageUrl = '/map-uin.svg';
+    L.imageOverlay(imageUrl, imageBounds, {
+      opacity: 1.0,
+      interactive: false
+    }).addTo(map);
+
+    // Fit Bounds Presisi Saat Inisialisasi
+    map.fitBounds(imageBounds, { padding: [0, 0], animate: false });
+    const exactZoom = map.getBoundsZoom(imageBounds, false, L.point(0, 0));
+    map.setMinZoom(exactZoom);
+    map.setZoom(exactZoom);
+
+    // 3. Render Marker & Simpan Referensi
+    const locationMarkers = {};
+
+    locations.forEach(loc => {
+      const marker = L.marker(loc.coordinates).addTo(map);
+      locationMarkers[loc.id] = marker;
+
+      const unitsHTML = loc.units.map(u => 
+        `<div class="text-[11px] text-slate-600 bg-slate-50 p-1.5 rounded border border-slate-100 mt-1 flex justify-between">
+          <span>${u.name}</span>
+          <span class="font-bold text-emerald-700">${u.floor}</span>
+        </div>`
+      ).join('');
+
+      const popupContent = `
+        <div class="p-1 max-w-[220px]">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">${loc.category}</span>
+          <h4 class="font-bold text-slate-800 text-sm mt-1 leading-tight">${loc.name}</h4>
+          <p class="text-xs text-slate-500 mt-1 leading-snug">${loc.description}</p>
+          <div class="mt-2 space-y-1">${unitsHTML}</div>
+        </div>
+      `;
+      marker.bindPopup(popupContent);
+    });
+
+    // 4. Fitur Smart Search
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    const btnClearSearch = document.getElementById('btn-clear-search');
+
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.trim().toLowerCase();
+      if (!query) {
+        searchResults.classList.add('hidden');
+        btnClearSearch.classList.add('hidden');
+        searchResults.innerHTML = '';
+        return;
+      }
+
+      btnClearSearch.classList.remove('hidden');
+
+      const matched = locations.filter(loc => {
+        const matchName = loc.name.toLowerCase().includes(query);
+        const matchCategory = loc.category.toLowerCase().includes(query);
+        const matchUnit = loc.units.some(u => u.name.toLowerCase().includes(query));
+        return matchName || matchCategory || matchUnit;
+      });
+
+      if (matched.length === 0) {
+        searchResults.innerHTML = `<div class="p-3 text-center text-xs text-slate-400">Tidak ada hasil yang cocok.</div>`;
+      } else {
+        searchResults.innerHTML = matched.map(loc => `
+          <div class="p-3 hover:bg-slate-50 cursor-pointer text-left transition-colors" onclick="focusToLocation('${loc.id}')">
+            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">${loc.category}</span>
+            <div class="font-bold text-xs text-slate-800 mt-0.5">${loc.name}</div>
+          </div>
+        `).join('');
+      }
+      searchResults.classList.remove('hidden');
+    });
+
+    window.focusToLocation = (id) => {
+      const loc = locations.find(l => l.id === id);
+      const marker = locationMarkers[id];
+      if (!loc || !marker) return;
+
+      map.flyTo(loc.coordinates, 19, { animate: true, duration: 0.8 });
+      marker.openPopup();
+      searchResults.classList.add('hidden');
+    };
+
+    btnClearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+      searchResults.classList.add('hidden');
+      btnClearSearch.classList.add('hidden');
+      searchInput.focus();
+    });
+
+    // 5. Fitur Live GPS Tracker
+    let userMarker = null;
+    let userCircle = null;
+
+    document.getElementById('btn-locate-me').addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Geolocation tidak didukung pada browser ini.');
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude, accuracy } = pos.coords;
+
+          if (userMarker) map.removeLayer(userMarker);
+          if (userCircle) map.removeLayer(userCircle);
+
+          userCircle = L.circle([latitude, longitude], {
+            pane: 'userLocationPane',
+            radius: Math.min(accuracy, 50),
+            color: '#3b82f6',
+            fillColor: '#60a5fa',
+            fillOpacity: 0.15,
+            weight: 1
+          }).addTo(map);
+
+          userMarker = L.circleMarker([latitude, longitude], {
+            pane: 'userLocationPane',
+            radius: 8,
+            fillColor: '#2563eb',
+            color: '#ffffff',
+            weight: 3,
+            fillOpacity: 1
+          }).addTo(map);
+
+          userMarker.bindPopup('<b>📍 Posisi Kamu Saat Ini</b>').openPopup();
+          map.flyTo([latitude, longitude], 19, { animate: true, duration: 1 });
+        },
+        (err) => alert('Gagal membaca GPS: ' + err.message),
+        { enableHighAccuracy: true }
+      );
+    });
+  </script>
+</body>
+</html>
